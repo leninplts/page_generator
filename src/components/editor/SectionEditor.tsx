@@ -112,12 +112,14 @@ function SortableSection({
   isExpanded,
   onToggleExpand,
   onContentChange,
+  eventId,
 }: {
   section: Section;
   onToggle: (id: string) => void;
   isExpanded: boolean;
   onToggleExpand: (id: string) => void;
   onContentChange: (id: string, content: Record<string, any>) => void;
+  eventId: string;
 }) {
   const info = SECTION_INFO[section.sectionType] || {
     label: section.sectionType,
@@ -236,6 +238,7 @@ function SortableSection({
             sectionType={section.sectionType}
             content={section.content as Record<string, any>}
             onChange={(newContent) => onContentChange(section.id, newContent)}
+            eventId={eventId}
           />
         </div>
       )}
@@ -415,6 +418,7 @@ export function SectionEditor({
                 isExpanded={expandedId === section.id}
                 onToggleExpand={handleToggleExpand}
                 onContentChange={handleContentChange}
+                eventId={eventId}
               />
             ))}
           </div>

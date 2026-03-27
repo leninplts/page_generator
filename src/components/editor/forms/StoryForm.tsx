@@ -1,12 +1,14 @@
 import { Input } from "../../ui/input";
 import { Label } from "../../ui/label";
+import { FileUploader } from "../FileUploader";
 
 interface StoryFormProps {
   content: Record<string, any>;
   onChange: (content: Record<string, any>) => void;
+  eventId: string;
 }
 
-export function StoryForm({ content, onChange }: StoryFormProps) {
+export function StoryForm({ content, onChange, eventId }: StoryFormProps) {
   const update = (field: string, value: string) => {
     onChange({ ...content, [field]: value });
   };
@@ -33,12 +35,14 @@ export function StoryForm({ content, onChange }: StoryFormProps) {
         />
       </div>
       <div className="space-y-1">
-        <Label htmlFor="story-image">URL de imagen</Label>
-        <Input
-          id="story-image"
-          placeholder="https://..."
-          value={content.imageUrl || ""}
-          onChange={(e) => update("imageUrl", e.target.value)}
+        <Label>Imagen</Label>
+        <FileUploader
+          eventId={eventId}
+          type="image"
+          accept="image/jpeg,image/png,image/webp"
+          currentUrl={content.imageUrl || ""}
+          onUploaded={(url) => update("imageUrl", url)}
+          label="Subir imagen"
         />
       </div>
     </div>

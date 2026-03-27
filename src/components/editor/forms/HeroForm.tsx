@@ -1,12 +1,14 @@
 import { Input } from "../../ui/input";
 import { Label } from "../../ui/label";
+import { FileUploader } from "../FileUploader";
 
 interface HeroFormProps {
   content: Record<string, any>;
   onChange: (content: Record<string, any>) => void;
+  eventId: string;
 }
 
-export function HeroForm({ content, onChange }: HeroFormProps) {
+export function HeroForm({ content, onChange, eventId }: HeroFormProps) {
   const update = (field: string, value: string) => {
     onChange({ ...content, [field]: value });
   };
@@ -32,12 +34,14 @@ export function HeroForm({ content, onChange }: HeroFormProps) {
         />
       </div>
       <div className="space-y-1">
-        <Label htmlFor="hero-image">URL de imagen principal</Label>
-        <Input
-          id="hero-image"
-          placeholder="https://..."
-          value={content.imageUrl || ""}
-          onChange={(e) => update("imageUrl", e.target.value)}
+        <Label>Imagen principal</Label>
+        <FileUploader
+          eventId={eventId}
+          type="image"
+          accept="image/jpeg,image/png,image/webp"
+          currentUrl={content.imageUrl || ""}
+          onUploaded={(url) => update("imageUrl", url)}
+          label="Subir imagen principal"
         />
       </div>
     </div>

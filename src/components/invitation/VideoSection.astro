@@ -1,0 +1,65 @@
+---
+interface Props {
+  url?: string;
+  type?: string;
+  poster?: string;
+  colors: { primary: string; secondary: string; accent: string; background: string; text: string };
+  fonts: { heading: string; body: string };
+  altBackground?: boolean;
+  variant?: string;
+}
+
+const { url, type = 'youtube', poster, colors, fonts, altBackground = false, variant = 'classic' } = Astro.props;
+const bgColor = altBackground ? colors.secondary : colors.background;
+
+// Parse YouTube/Vimeo embed URL
+function getEmbedUrl(rawUrl: string, videoType: string): string | null {
+  if (!rawUrl) return null;
+  if (videoType === 'youtube') {
+    const match = rawUrl.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+    return match ? `https://www.youtube.com/embed/${match[1]}?rel=0&modestbranding=1` : null;
+  }
+  if (videoType === 'vimeo') {
+    const match = rawUrl.match(/vimeo\.com\/(\d+)/);
+    return match ? `https://player.vimeo.com/video/${match[1]}` : null;
+  }
+  return rawUrl; // direct URL for uploaded videos
+}
+
+const embedUrl = url ? getEmbedUrl(url, type) : null;
+---
+
+{embedUrl && (
+  <section class="py-20 px-6 text-center" style={`background-color: ${bgColor}`}>
+    <div class="max-w-md mx-auto">
+      <h2
+        class="text-4xl mb-10"
+        style={`font-family: '${fonts.heading}', cursive; color: ${colors.primary}`}
+      >
+        Video
+      </h2>
+
+      <div class="aspect-video rounded-xl overflow-hidden shadow-lg">
+        {type === 'upload' ? (
+          <video
+            controls
+            preload="metadata"
+            poster={poster}
+            class="w-full h-full object-cover"
+          >
+            <source src={embedUrl} type="video/mp4" />
+          </video>
+        ) : (
+          <iframe
+            src={embedUrl}
+            title="Video del evento"
+            class="w-full h-full"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            loading="lazy"
+          />
+        )}
+      </div>
+    </div>
+  </section>
+)}

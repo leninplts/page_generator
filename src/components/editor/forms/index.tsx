@@ -17,16 +17,20 @@ interface SectionFormProps {
   sectionType: string;
   content: Record<string, any>;
   onChange: (content: Record<string, any>) => void;
+  eventId: string;
 }
 
 export function SectionForm({
   sectionType,
   content,
   onChange,
+  eventId,
 }: SectionFormProps) {
   switch (sectionType) {
     case "hero":
-      return <HeroForm content={content} onChange={onChange} />;
+      return (
+        <HeroForm content={content} onChange={onChange} eventId={eventId} />
+      );
     case "ceremony":
       return (
         <LocationForm content={content} onChange={onChange} title="Ceremonia" />
@@ -40,7 +44,9 @@ export function SectionForm({
     case "message":
       return <MessageForm content={content} onChange={onChange} />;
     case "story":
-      return <StoryForm content={content} onChange={onChange} />;
+      return (
+        <StoryForm content={content} onChange={onChange} eventId={eventId} />
+      );
     case "countdown":
       return <CountdownForm content={content} onChange={onChange} />;
     case "itinerary":
@@ -48,7 +54,9 @@ export function SectionForm({
     case "dresscode":
       return <DressCodeForm content={content} onChange={onChange} />;
     case "music":
-      return <MusicForm content={content} onChange={onChange} />;
+      return (
+        <MusicForm content={content} onChange={onChange} eventId={eventId} />
+      );
     case "entertainment":
       return <EntertainmentForm content={content} onChange={onChange} />;
     case "gifts":
@@ -58,7 +66,9 @@ export function SectionForm({
     case "video":
       return <VideoForm content={content} onChange={onChange} />;
     case "gallery":
-      return <GalleryForm content={content} onChange={onChange} />;
+      return (
+        <GalleryForm content={content} onChange={onChange} eventId={eventId} />
+      );
     default:
       return (
         <p className="text-sm text-slate-400 italic">

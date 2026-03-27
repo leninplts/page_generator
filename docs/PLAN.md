@@ -7,7 +7,7 @@
 | F0        | Fundacion y Arquitectura     |     1     |    8    |    Media    |                                                    ✅ Completada                                                    |
 | F1        | Core — Gestion de Eventos    |     4     |   27    |    Alta     | ✅ Completada (HU-001 90%, HU-002 85%, HU-003 ✅, HU-004 ✅) — T-001.3/T-001.4 diferidos, T-002.3/T-002.4 diferidos |
 | F2        | Templates y Personalizacion  |     3     |   25    |  Muy Alta   |           ✅ Completada (HU-005 85%, HU-006 75%, HU-007 ✅) — T-005.2/T-006.4/T-006.5/T-006.7-9 diferidos           |
-| F3        | Multimedia                   |     3     |   21    |    Alta     |                                                      Pendiente                                                      |
+| F3        | Multimedia                   |     3     |   21    |    Alta     | ✅ Completada (HU-008 ✅, HU-009 90%, HU-010 70%) — diferidos: biblioteca musica, fade audio, upload video directo  |
 | F4        | Pagina Publica de Invitacion |     4     |   27    |  Muy Alta   |                           🟡 Iniciada prematuramente (35% — base funcional sin contenido)                           |
 | F5        | Compartir y Distribucion     |     2     |   12    |    Media    |                                                      Pendiente                                                      |
 | F6        | Analytics y Gestion Avanzada |     2     |   10    |    Media    |                                                      Pendiente                                                      |
@@ -17,9 +17,9 @@
 
 ## Progreso General
 
-- **Tareas completadas:** ~77 de 139
-- **Porcentaje:** ~55%
-- **Fase actual:** F2 CERRADA. Siguiente: F3 (Multimedia)
+- **Tareas completadas:** ~95 de 139
+- **Porcentaje:** ~68%
+- **Fase actual:** F3 CERRADA. Siguiente: F4 (Pagina Publica — pulir + animaciones + RSVP)
 - **Diferidos de F1:** T-001.3 (recuperar contrasena), T-001.4 (login Google), T-002.3 (filtros), T-002.4 (busqueda)
 - **Diferidos de F2:** T-005.2 (template engine layouts), T-006.4/5 (tamanos/layout), T-006.7-9 (preview movil/presets/reset)
 - **Nota:** F4 iniciada prematuramente. Se cerrara despues de F3.
@@ -261,14 +261,14 @@ F0 (Setup)
 
 | Tarea   | Descripcion                                               | Estado |
 | ------- | --------------------------------------------------------- | :----: |
-| T-008.1 | Implementar upload de imagenes con drag & drop            |  [ ]   |
-| T-008.2 | Crop/resize de imagenes antes de subir                    |  [ ]   |
-| T-008.3 | Compresion automatica de imagenes (Sharp server-side)     |  [ ]   |
-| T-008.4 | Almacenamiento en S3 con URLs firmadas                    |  [ ]   |
-| T-008.5 | Galeria del evento (upload multiple, reordenar, eliminar) |  [ ]   |
-| T-008.6 | Lazy loading de imagenes en la invitacion publica         |  [ ]   |
-| T-008.7 | Formato WebP automatico para performance                  |  [ ]   |
-| T-008.8 | Limite de tamano y cantidad por evento                    |  [ ]   |
+| T-008.1 | Implementar upload de imagenes con drag & drop            |  [x]   |
+| T-008.2 | Crop/resize de imagenes antes de subir                    |  [x]   |
+| T-008.3 | Compresion automatica de imagenes (Sharp server-side)     |  [x]   |
+| T-008.4 | Almacenamiento en S3 con URLs firmadas                    |  [x]   |
+| T-008.5 | Galeria del evento (upload multiple, reordenar, eliminar) |  [x]   |
+| T-008.6 | Lazy loading de imagenes en la invitacion publica         |  [x]   |
+| T-008.7 | Formato WebP automatico para performance                  |  [x]   |
+| T-008.8 | Limite de tamano y cantidad por evento                    |  [x]   |
 
 **Criterios de aceptacion:**
 
@@ -285,13 +285,13 @@ F0 (Setup)
 
 | Tarea   | Descripcion                                                    | Estado |
 | ------- | -------------------------------------------------------------- | :----: |
-| T-009.1 | Implementar upload de archivos de audio (MP3, AAC)             |  [ ]   |
-| T-009.2 | Implementar reproductor flotante (play/pause/volumen)          |  [ ]   |
-| T-009.3 | Autoplay con gesto del usuario (cumplir politicas de browsers) |  [ ]   |
+| T-009.1 | Implementar upload de archivos de audio (MP3, AAC)             |  [x]   |
+| T-009.2 | Implementar reproductor flotante (play/pause/volumen)          |  [x]   |
+| T-009.3 | Autoplay con gesto del usuario (cumplir politicas de browsers) |  [x]   |
 | T-009.4 | Biblioteca de musica libre de derechos (opcional)              |  [ ]   |
-| T-009.5 | Previsualizacion de audio en el editor                         |  [ ]   |
+| T-009.5 | Previsualizacion de audio en el editor                         |  [x]   |
 | T-009.6 | Fade in/out al entrar a la pagina                              |  [ ]   |
-| T-009.7 | Persistencia del estado de audio al scrollear                  |  [ ]   |
+| T-009.7 | Persistencia del estado de audio al scrollear                  |  [x]   |
 
 **Criterios de aceptacion:**
 
@@ -308,11 +308,11 @@ F0 (Setup)
 
 | Tarea   | Descripcion                                     | Estado |
 | ------- | ----------------------------------------------- | :----: |
-| T-010.1 | Embed de videos de YouTube/Vimeo (URL paste)    |  [ ]   |
+| T-010.1 | Embed de videos de YouTube/Vimeo (URL paste)    |  [x]   |
 | T-010.2 | Upload directo de video (con limite de tamano)  |  [ ]   |
-| T-010.3 | Reproductor de video responsive                 |  [ ]   |
-| T-010.4 | Lazy loading de video (no cargar hasta visible) |  [ ]   |
-| T-010.5 | Thumbnail/poster del video                      |  [ ]   |
+| T-010.3 | Reproductor de video responsive                 |  [x]   |
+| T-010.4 | Lazy loading de video (no cargar hasta visible) |  [x]   |
+| T-010.5 | Thumbnail/poster del video                      |  [x]   |
 | T-010.6 | Fallback si el video no carga                   |  [ ]   |
 
 **Criterios de aceptacion:**

@@ -1,12 +1,13 @@
-import { Input } from "../../ui/input";
 import { Label } from "../../ui/label";
+import { FileUploader } from "../FileUploader";
 
 interface MusicFormProps {
   content: Record<string, any>;
   onChange: (content: Record<string, any>) => void;
+  eventId: string;
 }
 
-export function MusicForm({ content, onChange }: MusicFormProps) {
+export function MusicForm({ content, onChange, eventId }: MusicFormProps) {
   const update = (field: string, value: any) => {
     onChange({ ...content, [field]: value });
   };
@@ -14,12 +15,14 @@ export function MusicForm({ content, onChange }: MusicFormProps) {
   return (
     <div className="space-y-3">
       <div className="space-y-1">
-        <Label htmlFor="music-url">URL del audio (MP3)</Label>
-        <Input
-          id="music-url"
-          placeholder="https://ejemplo.com/musica.mp3"
-          value={content.audioUrl || ""}
-          onChange={(e) => update("audioUrl", e.target.value)}
+        <Label>Musica de fondo</Label>
+        <FileUploader
+          eventId={eventId}
+          type="audio"
+          accept="audio/mpeg,audio/mp3,audio/aac,audio/wav"
+          currentUrl={content.audioUrl || ""}
+          onUploaded={(url) => update("audioUrl", url)}
+          label="Subir archivo de audio"
         />
       </div>
       <div className="flex items-center gap-2">

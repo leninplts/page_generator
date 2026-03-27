@@ -7,6 +7,7 @@ import GodparentsSection from '../../components/invitation/GodparentsSection.ast
 import MessageSection from '../../components/invitation/MessageSection.astro';
 import ItinerarySection from '../../components/invitation/ItinerarySection.astro';
 import DressCodeSection from '../../components/invitation/DressCodeSection.astro';
+import VideoSection from '../../components/invitation/VideoSection.astro';
 import { CountdownSection } from '../../components/invitation/CountdownSection';
 import { SplashScreen } from '../../components/invitation/SplashScreen';
 import { MusicPlayer } from '../../components/invitation/MusicPlayer';
@@ -244,6 +245,17 @@ for (const section of sections) {
         if (s.type === 'dresscode') return (
           <DressCodeSection
             description={s.content.description}
+            colors={colors}
+            fonts={fonts}
+            altBackground={s.altBg}
+            variant={variant}
+          />
+        );
+        if (s.type === 'video' && s.content.url) return (
+          <VideoSection
+            url={s.content.url}
+            type={s.content.type}
+            poster={s.content.poster}
             colors={colors}
             fonts={fonts}
             altBackground={s.altBg}

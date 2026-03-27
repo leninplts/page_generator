@@ -1,22 +1,18 @@
-import { Input } from "../../ui/input";
-import { Button } from "../../ui/button";
+import { FileUploader } from "../FileUploader";
 
 interface GalleryFormProps {
   content: Record<string, any>;
   onChange: (content: Record<string, any>) => void;
+  eventId: string;
 }
 
-export function GalleryForm({ content, onChange }: GalleryFormProps) {
+export function GalleryForm({ content, onChange, eventId }: GalleryFormProps) {
   const images: string[] = content.images || [];
 
-  const addImage = () => {
-    onChange({ ...content, images: [...images, ""] });
-  };
-
-  const updateImage = (index: number, value: string) => {
-    const updated = [...images];
-    updated[index] = value;
-    onChange({ ...content, images: updated });
+  const addImage = (url: string) => {
+    if (url) {
+      onChange({ ...content, images: [...images, url] });
+    }
   };
 
   const removeImage = (index: number) => {
@@ -28,42 +24,48 @@ export function GalleryForm({ content, onChange }: GalleryFormProps) {
 
   return (
     <div className="space-y-3">
-      <p className="text-xs text-slate-500">
-        La subida de imagenes estara disponible pronto. Por ahora puedes agregar
-        URLs.
-      </p>
-      {images.map((url: string, index: number) => (
-        <div key={index} className="flex gap-2 items-center">
-          <Input
-            className="flex-1"
-            placeholder="https://ejemplo.com/foto.jpg"
-            value={url}
-            onChange={(e) => updateImage(index, e.target.value)}
-          />
-          <button
-            type="button"
-            onClick={() => removeImage(index)}
-            className="rounded-lg p-2 text-slate-400 hover:bg-red-50 hover:text-red-600 transition-colors"
-          >
-            <svg
-              className="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18L18 6M6 6l12 12"
+      {/* Existing images grid */}
+      {images.length > 0 && (
+        <div className="grid grid-cols-3 gap-2">
+          {images.map((url: string, index: number) => (
+            <div key={index} className="group relative aspect-square">
+              <img
+                src={url}
+                alt={`Foto ${index + 1}`}
+                className="h-full w-full rounded-lg object-cover"
               />
-            </svg>
-          </button>
+              <button
+                type="button"
+                onClick={() => removeImage(index)}
+                className="absolute top-1 right-1 rounded-full bg-red-500 p-1 text-white opacity-0 transition-opacity group-hover:opacity-100"
+              >
+                <svg
+                  className="h-3 w-3"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="2"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+          ))}
         </div>
-      ))}
-      <Button type="button" variant="outline" size="sm" onClick={addImage}>
-        + Agregar imagen
-      </Button>
+      )}
+
+      {/* Upload new image */}
+      <FileUploader
+        eventId={eventId}
+        type="image"
+        accept="image/jpeg,image/png,image/webp"
+        onUploaded={addImage}
+        label="Agregar foto a la galeria"
+      />
     </div>
   );
 }

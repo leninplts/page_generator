@@ -1,0 +1,52 @@
+---
+interface EntertainmentItem {
+  name: string;
+  type: string;
+  photoUrl?: string;
+}
+
+interface Props {
+  items: EntertainmentItem[];
+  colors: { primary: string; secondary: string; accent: string; background: string; text: string };
+  fonts: { heading: string; body: string };
+  altBackground?: boolean;
+  variant?: string;
+}
+
+const { items = [], colors, fonts, altBackground = false, variant = 'classic' } = Astro.props;
+const bgColor = altBackground ? colors.secondary : colors.background;
+---
+
+{items.length > 0 && (
+  <section class="py-20 px-6 text-center" style={`background-color: ${bgColor}`}>
+    <div class="max-w-md mx-auto">
+      {variant === 'classic' && (
+        <div class="mb-4 flex justify-center opacity-25">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke={colors.primary} stroke-width="1">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z" />
+          </svg>
+        </div>
+      )}
+
+      <h2
+        class="text-4xl mb-10"
+        style={`font-family: '${fonts.heading}', cursive; color: ${colors.primary}`}
+      >
+        Amenidades
+      </h2>
+
+      <div class="space-y-6">
+        {items.map((item) => (
+          <div class="text-center">
+            <p class="text-sm font-semibold" style={`color: ${colors.text}; font-family: '${fonts.body}', sans-serif`}>
+              {item.name}
+            </p>
+            <p class="text-xs uppercase tracking-[0.15em] mt-0.5" style={`color: ${colors.text}; opacity: 0.5; font-family: '${fonts.body}', sans-serif`}>
+              {item.type}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+)}

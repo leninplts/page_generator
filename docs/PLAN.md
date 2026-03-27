@@ -8,7 +8,7 @@
 | F1        | Core — Gestion de Eventos    |     4     |   27    |    Alta     | ✅ Completada (HU-001 90%, HU-002 85%, HU-003 ✅, HU-004 ✅) — T-001.3/T-001.4 diferidos, T-002.3/T-002.4 diferidos |
 | F2        | Templates y Personalizacion  |     3     |   25    |  Muy Alta   |           ✅ Completada (HU-005 85%, HU-006 75%, HU-007 ✅) — T-005.2/T-006.4/T-006.5/T-006.7-9 diferidos           |
 | F3        | Multimedia                   |     3     |   21    |    Alta     | ✅ Completada (HU-008 ✅, HU-009 90%, HU-010 70%) — diferidos: biblioteca musica, fade audio, upload video directo  |
-| F4        | Pagina Publica de Invitacion |     4     |   27    |  Muy Alta   |                           🟡 Iniciada prematuramente (35% — base funcional sin contenido)                           |
+| F4        | Pagina Publica de Invitacion |     4     |   27    |  Muy Alta   |                           ✅ Completada (HU-011 90%, HU-012 90%, HU-013 50%, HU-014 80%)                            |
 | F5        | Compartir y Distribucion     |     2     |   12    |    Media    |                                                      Pendiente                                                      |
 | F6        | Analytics y Gestion Avanzada |     2     |   10    |    Media    |                                                      Pendiente                                                      |
 | F7        | Admin Panel                  |     1     |    5    |    Media    |                                                      Pendiente                                                      |
@@ -17,9 +17,10 @@
 
 ## Progreso General
 
-- **Tareas completadas:** ~95 de 139
-- **Porcentaje:** ~68%
-- **Fase actual:** F3 CERRADA. Siguiente: F4 (Pagina Publica — pulir + animaciones + RSVP)
+- **Tareas completadas:** ~115 de 139
+- **Porcentaje:** ~83%
+- **Fase actual:** F4 CERRADA. Siguiente: F5 (Compartir y Distribucion)
+- **Diferidos F4:** Lighthouse optimization, favicon dinamico, service worker, Mapbox, CSV export, notificaciones RSVP
 - **Diferidos de F1:** T-001.3 (recuperar contrasena), T-001.4 (login Google), T-002.3 (filtros), T-002.4 (busqueda)
 - **Diferidos de F2:** T-005.2 (template engine layouts), T-006.4/5 (tamanos/layout), T-006.7-9 (preview movil/presets/reset)
 - **Nota:** F4 iniciada prematuramente. Se cerrara despues de F3.
@@ -332,17 +333,17 @@ F0 (Setup)
 
 | Tarea    | Descripcion                                                          | Estado |
 | -------- | -------------------------------------------------------------------- | :----: |
-| T-011.1  | Motor de renderizado de pagina publica desde datos del evento        |  [ ]   |
-| T-011.2  | Renderizado de cada seccion/bloque segun template elegido            |  [ ]   |
-| T-011.3  | Responsive design mobile-first (320px hasta 1440px)                  |  [ ]   |
-| T-011.4  | Animaciones de entrada por seccion (scroll-triggered)                |  [ ]   |
-| T-011.5  | Smooth scrolling entre secciones                                     |  [ ]   |
+| T-011.1  | Motor de renderizado de pagina publica desde datos del evento        |  [x]   |
+| T-011.2  | Renderizado de cada seccion/bloque segun template elegido            |  [x]   |
+| T-011.3  | Responsive design mobile-first (320px hasta 1440px)                  |  [x]   |
+| T-011.4  | Animaciones de entrada por seccion (scroll-triggered)                |  [x]   |
+| T-011.5  | Smooth scrolling entre secciones                                     |  [x]   |
 | T-011.6  | Performance: Lighthouse score > 90 en mobile                         |  [ ]   |
-| T-011.7  | SEO basico: og:title, og:image, og:description para WhatsApp preview |  [ ]   |
+| T-011.7  | SEO basico: og:title, og:image, og:description para WhatsApp preview |  [x]   |
 | T-011.8  | Favicon dinamico por evento                                          |  [ ]   |
-| T-011.9  | Loading screen elegante mientras carga                               |  [ ]   |
+| T-011.9  | Loading screen elegante mientras carga                               |  [x]   |
 | T-011.10 | Soporte offline (Service Worker para assets cacheados)               |  [ ]   |
-| T-011.11 | Manejo de 404 para URLs invalidas                                    |  [ ]   |
+| T-011.11 | Manejo de 404 para URLs invalidas                                    |  [x]   |
 
 **Criterios de aceptacion:**
 
@@ -360,10 +361,10 @@ F0 (Setup)
 
 | Tarea   | Descripcion                                                       | Estado |
 | ------- | ----------------------------------------------------------------- | :----: |
-| T-012.1 | Implementar componente countdown (dias, horas, minutos, segundos) |  [ ]   |
-| T-012.2 | 3 estilos de countdown (flip, circular, numerico)                 |  [ ]   |
-| T-012.3 | Mensaje post-evento cuando la cuenta llega a cero                 |  [ ]   |
-| T-012.4 | Animacion fluida del countdown                                    |  [ ]   |
+| T-012.1 | Implementar componente countdown (dias, horas, minutos, segundos) |  [x]   |
+| T-012.2 | 3 estilos de countdown (flip, circular, numerico)                 |  [x]   |
+| T-012.3 | Mensaje post-evento cuando la cuenta llega a cero                 |  [x]   |
+| T-012.4 | Animacion fluida del countdown                                    |  [x]   |
 | T-012.5 | Timezone-aware (calcular basado en zona horaria del evento)       |  [ ]   |
 
 **Criterios de aceptacion:**
@@ -381,9 +382,9 @@ F0 (Setup)
 | Tarea   | Descripcion                                                 | Estado |
 | ------- | ----------------------------------------------------------- | :----: |
 | T-013.1 | Integracion con Mapbox GL JS (mapa interactivo con estilos) |  [ ]   |
-| T-013.2 | Boton "Como llegar" (abre Google Maps/Waze/Apple Maps)      |  [ ]   |
+| T-013.2 | Boton "Como llegar" (abre Google Maps/Waze/Apple Maps)      |  [x]   |
 | T-013.3 | Direccion copiable con un tap                               |  [ ]   |
-| T-013.4 | Soporte para multiples ubicaciones (ceremonia + recepcion)  |  [ ]   |
+| T-013.4 | Soporte para multiples ubicaciones (ceremonia + recepcion)  |  [x]   |
 | T-013.5 | Mapa estatico como fallback (imagen para performance)       |  [ ]   |
 
 **Criterios de aceptacion:**
@@ -400,11 +401,11 @@ F0 (Setup)
 
 | Tarea   | Descripcion                                                 | Estado |
 | ------- | ----------------------------------------------------------- | :----: |
-| T-014.1 | Formulario de RSVP (nombre, asistencia si/no, acompanantes) |  [ ]   |
-| T-014.2 | Campos opcionales: alergias alimentarias, mensaje           |  [ ]   |
-| T-014.3 | Confirmacion visual post-envio (animacion)                  |  [ ]   |
-| T-014.4 | Backend: almacenar y listar RSVPs por evento                |  [ ]   |
-| T-014.5 | Dashboard del organizador: vista de RSVPs                   |  [ ]   |
+| T-014.1 | Formulario de RSVP (nombre, asistencia si/no, acompanantes) |  [x]   |
+| T-014.2 | Campos opcionales: alergias alimentarias, mensaje           |  [x]   |
+| T-014.3 | Confirmacion visual post-envio (animacion)                  |  [x]   |
+| T-014.4 | Backend: almacenar y listar RSVPs por evento                |  [x]   |
+| T-014.5 | Dashboard del organizador: vista de RSVPs                   |  [x]   |
 | T-014.6 | Exportar RSVPs a CSV/Excel                                  |  [ ]   |
 | T-014.7 | Notificacion al organizador cuando alguien confirma         |  [ ]   |
 

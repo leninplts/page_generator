@@ -8,7 +8,12 @@ import MessageSection from '../../components/invitation/MessageSection.astro';
 import ItinerarySection from '../../components/invitation/ItinerarySection.astro';
 import DressCodeSection from '../../components/invitation/DressCodeSection.astro';
 import VideoSection from '../../components/invitation/VideoSection.astro';
+import GallerySection from '../../components/invitation/GallerySection.astro';
+import GiftsSection from '../../components/invitation/GiftsSection.astro';
+import EntertainmentSection from '../../components/invitation/EntertainmentSection.astro';
+import SectionDivider from '../../components/invitation/SectionDivider.astro';
 import { CountdownSection } from '../../components/invitation/CountdownSection';
+import { RsvpSection } from '../../components/invitation/RsvpSection';
 import { SplashScreen } from '../../components/invitation/SplashScreen';
 import { MusicPlayer } from '../../components/invitation/MusicPlayer';
 import { db } from '../../lib/db';
@@ -135,6 +140,16 @@ for (const section of sections) {
         background: inherit;
         clip-path: polygon(0% 60%, 2% 40%, 5% 55%, 8% 35%, 12% 50%, 15% 30%, 18% 55%, 22% 40%, 25% 60%, 28% 35%, 32% 50%, 35% 30%, 38% 55%, 42% 40%, 45% 60%, 48% 35%, 52% 55%, 55% 40%, 58% 55%, 62% 35%, 65% 50%, 68% 40%, 72% 60%, 75% 35%, 78% 50%, 82% 30%, 85% 55%, 88% 35%, 92% 50%, 95% 40%, 98% 55%, 100% 40%, 100% 100%, 0% 100%);
       }
+      /* Scroll-triggered fade-in animations */
+      .animate-section {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.8s ease, transform 0.8s ease;
+      }
+      .animate-section.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
     </style>
   </head>
   <body style={`font-family: '${fonts.body}', sans-serif; background-color: ${colors.background};`}>
@@ -150,8 +165,16 @@ for (const section of sections) {
       />
 
       {/* Sections */}
-      {processedSections.map((s) => {
-        if (s.type === 'hero') return (
+      {processedSections.map((s, idx) => {
+        const currentBg = s.altBg ? colors.secondary : colors.background;
+        const nextS = processedSections[idx + 1];
+        const nextBg = nextS ? (nextS.altBg ? colors.secondary : colors.background) : null;
+        const showDivider = nextBg !== null && nextBg !== currentBg;
+        const skipAnim = s.type === 'hero' || s.type === 'countdown';
+
+        let section = null;
+
+        if (s.type === 'hero') section = (
           <HeroSection
             title={s.content.title || event.title}
             subtitle={s.content.subtitle}
@@ -162,7 +185,7 @@ for (const section of sections) {
             variant={variant}
           />
         );
-        if (s.type === 'countdown' && event.eventDate) return (
+        if (s.type === 'countdown' && event.eventDate) section = (
           <CountdownSection
             client:load
             eventDate={event.eventDate}
@@ -173,7 +196,7 @@ for (const section of sections) {
             variant={variant}
           />
         );
-        if (s.type === 'story') return (
+        if (s.type === 'story') section = (
           <StorySection
             title={s.content.title}
             content={s.content.content}
@@ -184,7 +207,7 @@ for (const section of sections) {
             variant={variant}
           />
         );
-        if (s.type === 'ceremony') return (
+        if (s.type === 'ceremony') section = (
           <LocationSection
             title="Ceremonia"
             placeName={s.content.placeName}
@@ -192,6 +215,7 @@ for (const section of sections) {
             time={s.content.time}
             latitude={s.content.latitude}
             longitude={s.content.longitude}
+            notes={s.content.notes}
             imageUrl={s.content.imageUrl}
             colors={colors}
             fonts={fonts}
@@ -199,7 +223,7 @@ for (const section of sections) {
             variant={variant}
           />
         );
-        if (s.type === 'reception') return (
+        if (s.type === 'reception') section = (
           <LocationSection
             title="Recepcion"
             placeName={s.content.placeName}
@@ -207,6 +231,7 @@ for (const section of sections) {
             time={s.content.time}
             latitude={s.content.latitude}
             longitude={s.content.longitude}
+            notes={s.content.notes}
             imageUrl={s.content.imageUrl}
             colors={colors}
             fonts={fonts}
@@ -214,7 +239,7 @@ for (const section of sections) {
             variant={variant}
           />
         );
-        if (s.type === 'godparents') return (
+        if (s.type === 'godparents') section = (
           <GodparentsSection
             people={s.content.people || []}
             colors={colors}
@@ -223,7 +248,16 @@ for (const section of sections) {
             variant={variant}
           />
         );
-        if (s.type === 'message') return (
+        if (s.type === 'gallery') section = (
+          <GallerySection
+            images={s.content.images || []}
+            colors={colors}
+            fonts={fonts}
+            altBackground={s.altBg}
+            variant={variant}
+          />
+        );
+        if (s.type === 'message') section = (
           <MessageSection
             title={s.content.title}
             content={s.content.content}
@@ -233,7 +267,7 @@ for (const section of sections) {
             variant={variant}
           />
         );
-        if (s.type === 'itinerary') return (
+        if (s.type === 'itinerary') section = (
           <ItinerarySection
             items={s.content.items || []}
             colors={colors}
@@ -242,7 +276,7 @@ for (const section of sections) {
             variant={variant}
           />
         );
-        if (s.type === 'dresscode') return (
+        if (s.type === 'dresscode') section = (
           <DressCodeSection
             description={s.content.description}
             colors={colors}
@@ -251,7 +285,7 @@ for (const section of sections) {
             variant={variant}
           />
         );
-        if (s.type === 'video' && s.content.url) return (
+        if (s.type === 'video' && s.content.url) section = (
           <VideoSection
             url={s.content.url}
             type={s.content.type}
@@ -262,7 +296,46 @@ for (const section of sections) {
             variant={variant}
           />
         );
-        return null;
+        if (s.type === 'entertainment') section = (
+          <EntertainmentSection
+            items={s.content.items || []}
+            colors={colors}
+            fonts={fonts}
+            altBackground={s.altBg}
+            variant={variant}
+          />
+        );
+        if (s.type === 'gifts') section = (
+          <GiftsSection
+            items={s.content.items || []}
+            colors={colors}
+            fonts={fonts}
+            altBackground={s.altBg}
+            variant={variant}
+          />
+        );
+        if (s.type === 'rsvp') section = (
+          <RsvpSection
+            client:load
+            eventId={event.id}
+            deadline={s.content.deadline}
+            maxGuests={s.content.maxGuests}
+            showDietary={s.content.showDietary}
+            showMessage={s.content.showMessage}
+            colors={colors}
+            fonts={fonts}
+            variant={variant}
+          />
+        );
+
+        if (!section) return null;
+
+        return (
+          <>
+            {skipAnim ? section : <div class="animate-section">{section}</div>}
+            {showDivider && <SectionDivider fromColor={currentBg} toColor={nextBg} variant={variant} />}
+          </>
+        );
       })}
 
       {/* Footer */}
@@ -278,5 +351,22 @@ for (const section of sections) {
 
     {/* Floating Music Player */}
     <MusicPlayer client:load audioUrl={audioUrl} colors={colors} />
+
+    <script>
+      // IntersectionObserver for scroll animations
+      document.addEventListener('DOMContentLoaded', () => {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+              }
+            });
+          },
+          { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+        );
+        document.querySelectorAll('.animate-section').forEach((el) => observer.observe(el));
+      });
+    </script>
   </body>
 </html>

@@ -1,0 +1,44 @@
+---
+interface Props {
+  images: string[];
+  colors: { primary: string; secondary: string; accent: string; background: string; text: string };
+  fonts: { heading: string; body: string };
+  altBackground?: boolean;
+  variant?: string;
+}
+
+const { images = [], colors, fonts, altBackground = false, variant = 'classic' } = Astro.props;
+const bgColor = altBackground ? colors.secondary : colors.background;
+---
+
+{images.length > 0 && (
+  <section class="py-20 px-6 text-center" style={`background-color: ${bgColor}`}>
+    <div class="max-w-md mx-auto">
+      <h2
+        class="text-4xl mb-10"
+        style={`font-family: '${fonts.heading}', cursive; color: ${colors.primary}`}
+      >
+        Galeria
+      </h2>
+
+      <div class="grid grid-cols-2 gap-2">
+        {images.map((url: string, i: number) => (
+          <div class:list={[
+            'overflow-hidden rounded-lg',
+            i === 0 && images.length > 2 ? 'col-span-2' : ''
+          ]}>
+            <img
+              src={url}
+              alt={`Foto ${i + 1}`}
+              class:list={[
+                'w-full object-cover',
+                i === 0 && images.length > 2 ? 'h-56' : 'h-40'
+              ]}
+              loading="lazy"
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+)}

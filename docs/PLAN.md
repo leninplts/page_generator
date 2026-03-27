@@ -6,7 +6,7 @@
 | --------- | ---------------------------- | :-------: | :-----: | :---------: | :--------------------------------------------------------------: |
 | F0        | Fundacion y Arquitectura     |     1     |    8    |    Media    |                          ✅ Completada                           |
 | F1        | Core — Gestion de Eventos    |     4     |   27    |    Alta     | 🔄 En progreso (HU-001 ✅, HU-002 ✅, HU-003 ✅, HU-004 parcial) |
-| F2        | Templates y Personalizacion  |     3     |   25    |  Muy Alta   |                            Pendiente                             |
+| F2        | Templates y Personalizacion  |     3     |   25    |  Muy Alta   |             🔄 En progreso (T-005.1 ✅, T-005.3 ✅)              |
 | F3        | Multimedia                   |     3     |   21    |    Alta     |                            Pendiente                             |
 | F4        | Pagina Publica de Invitacion |     4     |   27    |  Muy Alta   |                            Pendiente                             |
 | F5        | Compartir y Distribucion     |     2     |   12    |    Media    |                            Pendiente                             |
@@ -17,9 +17,9 @@
 
 ## Progreso General
 
-- **Tareas completadas:** ~32 de 139 (F0: 8/8, F1-HU001: 5/6, F1-HU002: 4/7, F1-HU003: 7/8, F1-HU004: 2/9)
-- **Porcentaje:** ~23%
-- **Fase actual:** F1 — Core (HU-004 formularios dinamicos por tipo pendiente, T-003.4 seleccion template pendiente)
+- **Tareas completadas:** ~36 de 139 (F0: 8/8, F1-HU001: 5/6, F1-HU002: 5/7, F1-HU003: 7/8, F1-HU004: 2/9, F2-HU005: 2/7)
+- **Porcentaje:** ~26%
+- **Fase actual:** F2 — Templates (arquitectura + 11 templates definidos + seed + API. Falta galeria, personalizacion, editor de secciones)
 
 ## MVP Minimo Viable
 
@@ -106,7 +106,7 @@ F0 (Setup)
 | T-002.3 | Implementar filtros por tipo de evento y estado                     |  [ ]   |
 | T-002.4 | Implementar busqueda de eventos                                     |  [ ]   |
 | T-002.5 | Mostrar estadisticas basicas (eventos activos, vistas, RSVPs)       |  [x]   |
-| T-002.6 | Implementar acciones rapidas (editar, duplicar, archivar, eliminar) |  [ ]   |
+| T-002.6 | Implementar acciones rapidas (editar, duplicar, archivar, eliminar) |  [x]   |
 | T-002.7 | Responsive: adaptacion a tablet y mobile                            |  [x]   |
 
 **Criterios de aceptacion:**
@@ -175,9 +175,9 @@ F0 (Setup)
 
 | Tarea   | Descripcion                                                          | Estado |
 | ------- | -------------------------------------------------------------------- | :----: |
-| T-005.1 | Definir arquitectura de templates (como se almacenan/renderizan)     |  [ ]   |
+| T-005.1 | Definir arquitectura de templates (como se almacenan/renderizan)     |  [x]   |
 | T-005.2 | Crear sistema de template engine (renderizado dinamico)              |  [ ]   |
-| T-005.3 | Disenar e implementar 2-3 templates por tipo de evento (10-15 total) |  [ ]   |
+| T-005.3 | Disenar e implementar 2-3 templates por tipo de evento (10-15 total) |  [x]   |
 | T-005.4 | Implementar galeria de templates con preview                         |  [ ]   |
 | T-005.5 | Implementar filtrado de templates por tipo de evento                 |  [ ]   |
 | T-005.6 | Preview del template con datos de ejemplo                            |  [ ]   |

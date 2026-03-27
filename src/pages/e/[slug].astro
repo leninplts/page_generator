@@ -1,4 +1,5 @@
 ---
+import '../../styles/global.css';
 import HeroSection from '../../components/invitation/HeroSection.astro';
 import StorySection from '../../components/invitation/StorySection.astro';
 import LocationSection from '../../components/invitation/LocationSection.astro';
@@ -63,6 +64,8 @@ const fonts = config.fonts || {
   heading: 'Playfair Display',
   body: 'Lato',
 };
+
+const variant = (config as any).variant || 'classic';
 
 // Format date for display
 const formattedDate = event.eventDate
@@ -142,6 +145,7 @@ for (const section of sections) {
         subtitle={formattedDate}
         colors={colors}
         fonts={fonts}
+        variant={variant}
       />
 
       {/* Sections */}
@@ -154,6 +158,7 @@ for (const section of sections) {
             imageUrl={s.content.imageUrl}
             colors={colors}
             fonts={fonts}
+            variant={variant}
           />
         );
         if (s.type === 'countdown' && event.eventDate) return (
@@ -164,6 +169,7 @@ for (const section of sections) {
             endMessage={s.content.endMessage}
             colors={colors}
             fonts={fonts}
+            variant={variant}
           />
         );
         if (s.type === 'story') return (
@@ -174,6 +180,7 @@ for (const section of sections) {
             colors={colors}
             fonts={fonts}
             altBackground={s.altBg}
+            variant={variant}
           />
         );
         if (s.type === 'ceremony') return (
@@ -188,6 +195,7 @@ for (const section of sections) {
             colors={colors}
             fonts={fonts}
             altBackground={s.altBg}
+            variant={variant}
           />
         );
         if (s.type === 'reception') return (
@@ -202,6 +210,7 @@ for (const section of sections) {
             colors={colors}
             fonts={fonts}
             altBackground={s.altBg}
+            variant={variant}
           />
         );
         if (s.type === 'godparents') return (
@@ -210,6 +219,7 @@ for (const section of sections) {
             colors={colors}
             fonts={fonts}
             altBackground={s.altBg}
+            variant={variant}
           />
         );
         if (s.type === 'message') return (
@@ -219,6 +229,7 @@ for (const section of sections) {
             colors={colors}
             fonts={fonts}
             altBackground={s.altBg}
+            variant={variant}
           />
         );
         if (s.type === 'itinerary') return (
@@ -227,6 +238,7 @@ for (const section of sections) {
             colors={colors}
             fonts={fonts}
             altBackground={s.altBg}
+            variant={variant}
           />
         );
         if (s.type === 'dresscode') return (
@@ -235,6 +247,7 @@ for (const section of sections) {
             colors={colors}
             fonts={fonts}
             altBackground={s.altBg}
+            variant={variant}
           />
         );
         return null;

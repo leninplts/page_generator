@@ -7,38 +7,64 @@ interface Person {
 
 interface Props {
   people: Person[];
-  colors: { primary: string; secondary: string; background: string; text: string };
+  colors: { primary: string; secondary: string; accent: string; background: string; text: string };
   fonts: { heading: string; body: string };
   altBackground?: boolean;
+  variant?: string;
 }
 
-const { people = [], colors, fonts, altBackground = false } = Astro.props;
+const { people = [], colors, fonts, altBackground = false, variant = 'classic' } = Astro.props;
 const bgColor = altBackground ? colors.secondary : colors.background;
 ---
 
-<section class="py-14 px-6 text-center" style={`background-color: ${bgColor}`}>
-  <h2
-    class="text-3xl mb-8"
-    style={`font-family: '${fonts.heading}', cursive; color: ${colors.primary}`}
-  >
-    Padrinos y Familia
-  </h2>
+<section class="py-20 px-6 text-center" style={`background-color: ${bgColor}`}>
+  <div class="max-w-md mx-auto">
+    <h2
+      class="text-4xl mb-12"
+      style={`font-family: '${fonts.heading}', cursive; color: ${colors.primary}`}
+    >
+      Padrinos y Familia
+    </h2>
 
-  <div class="space-y-6 max-w-xs mx-auto">
-    {people.map((person) => (
-      <div class="flex items-center gap-4">
-        {person.photoUrl ? (
-          <img src={person.photoUrl} alt={person.name} class="w-14 h-14 rounded-full object-cover" loading="lazy" />
-        ) : (
-          <div class="w-14 h-14 rounded-full flex items-center justify-center text-lg font-semibold" style={`background-color: ${colors.secondary}; color: ${colors.primary}`}>
-            {person.name.charAt(0)}
+    {people.length > 0 ? (
+      <div class="space-y-8">
+        {people.map((person) => (
+          <div class="text-center">
+            {person.photoUrl ? (
+              <img
+                src={person.photoUrl}
+                alt={person.name}
+                class="w-20 h-20 rounded-full object-cover mx-auto mb-3 border-2"
+                style={`border-color: ${colors.accent}; opacity: 0.9`}
+                loading="lazy"
+              />
+            ) : (
+              <div
+                class="w-20 h-20 rounded-full mx-auto mb-3 flex items-center justify-center text-2xl"
+                style={`background-color: ${colors.secondary}; color: ${colors.primary}; font-family: '${fonts.heading}', cursive`}
+              >
+                {person.name.charAt(0)}
+              </div>
+            )}
+            <p
+              class="text-sm font-medium"
+              style={`color: ${colors.text}; font-family: '${fonts.body}', sans-serif`}
+            >
+              {person.name}
+            </p>
+            <p
+              class="text-xs uppercase tracking-[0.15em] mt-0.5"
+              style={`color: ${colors.text}; opacity: 0.5; font-family: '${fonts.body}', sans-serif`}
+            >
+              {person.role}
+            </p>
           </div>
-        )}
-        <div class="text-left">
-          <p class="font-semibold text-sm" style={`color: ${colors.text}`}>{person.name}</p>
-          <p class="text-xs" style={`color: ${colors.text}; opacity: 0.6`}>{person.role}</p>
-        </div>
+        ))}
       </div>
-    ))}
+    ) : (
+      <p class="text-sm italic" style={`color: ${colors.text}; opacity: 0.4`}>
+        Los padrinos seran anunciados pronto
+      </p>
+    )}
   </div>
 </section>

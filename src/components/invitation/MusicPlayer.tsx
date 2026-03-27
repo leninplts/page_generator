@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 interface MusicPlayerProps {
   audioUrl?: string;
-  colors: { primary: string; background: string };
+  colors: { primary: string; background: string; accent: string };
 }
 
 export function MusicPlayer({ audioUrl, colors }: MusicPlayerProps) {
@@ -10,26 +10,21 @@ export function MusicPlayer({ audioUrl, colors }: MusicPlayerProps) {
 
   useEffect(() => {
     const audio = document.getElementById("bg-music") as HTMLAudioElement;
-    if (audio) {
-      const handlePlay = () => setPlaying(true);
-      const handlePause = () => setPlaying(false);
-      audio.addEventListener("play", handlePlay);
-      audio.addEventListener("pause", handlePause);
-      return () => {
-        audio.removeEventListener("play", handlePlay);
-        audio.removeEventListener("pause", handlePause);
-      };
-    }
+    if (!audio) return;
+    const onPlay = () => setPlaying(true);
+    const onPause = () => setPlaying(false);
+    audio.addEventListener("play", onPlay);
+    audio.addEventListener("pause", onPause);
+    return () => {
+      audio.removeEventListener("play", onPlay);
+      audio.removeEventListener("pause", onPause);
+    };
   }, []);
 
   const togglePlay = () => {
     const audio = document.getElementById("bg-music") as HTMLAudioElement;
     if (!audio) return;
-    if (audio.paused) {
-      audio.play().catch(() => {});
-    } else {
-      audio.pause();
-    }
+    audio.paused ? audio.play().catch(() => {}) : audio.pause();
   };
 
   if (!audioUrl) return null;
@@ -37,17 +32,23 @@ export function MusicPlayer({ audioUrl, colors }: MusicPlayerProps) {
   return (
     <button
       onClick={togglePlay}
-      className="fixed bottom-6 right-6 z-40 w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-110"
-      style={{ backgroundColor: colors.primary, color: colors.background }}
+      className="fixed bottom-6 right-6 z-40 w-11 h-11 rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110 border"
+      style={{
+        backgroundColor: `${colors.background}dd`,
+        borderColor: `${colors.accent}40`,
+        color: colors.primary,
+        backdropFilter: "blur(8px)",
+      }}
       aria-label={playing ? "Pausar musica" : "Reproducir musica"}
     >
       {playing ? (
         <svg
-          className="h-5 w-5"
-          fill="none"
+          width="16"
+          height="16"
           viewBox="0 0 24 24"
-          strokeWidth="2"
+          fill="none"
           stroke="currentColor"
+          strokeWidth="2"
         >
           <path
             strokeLinecap="round"
@@ -56,7 +57,7 @@ export function MusicPlayer({ audioUrl, colors }: MusicPlayerProps) {
           />
         </svg>
       ) : (
-        <svg className="h-5 w-5 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
           <path d="M8 5v14l11-7z" />
         </svg>
       )}

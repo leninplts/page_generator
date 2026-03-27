@@ -1,8 +1,11 @@
+export type TemplateVariant = "classic" | "modern" | "elegant";
+
 export interface TemplateDefinition {
   name: string;
   slug: string;
   eventType: "birthday" | "xv" | "baptism" | "wedding" | "graduation";
   category: string;
+  variant: TemplateVariant;
   description: string;
   previewImage: string | null;
   defaultConfig: {
@@ -17,6 +20,7 @@ export interface TemplateDefinition {
       heading: string;
       body: string;
     };
+    variant: TemplateVariant;
   };
   sectionsOrder: string[];
 }
@@ -28,6 +32,7 @@ export const weddingElegant: TemplateDefinition = {
   slug: "wedding-elegant",
   eventType: "wedding",
   category: "elegant",
+  variant: "classic",
   description: "Diseno clasico y sofisticado con tonos dorados",
   previewImage: null,
   defaultConfig: {
@@ -42,6 +47,7 @@ export const weddingElegant: TemplateDefinition = {
       heading: "Playfair Display",
       body: "Lato",
     },
+    variant: "classic",
   },
   sectionsOrder: [
     "hero",
@@ -64,6 +70,7 @@ export const weddingModern: TemplateDefinition = {
   slug: "wedding-modern",
   eventType: "wedding",
   category: "modern",
+  variant: "modern",
   description: "Lineas limpias y tipografia contemporanea",
   previewImage: null,
   defaultConfig: {
@@ -78,6 +85,7 @@ export const weddingModern: TemplateDefinition = {
       heading: "Montserrat",
       body: "Open Sans",
     },
+    variant: "modern",
   },
   sectionsOrder: [
     "hero",
@@ -99,6 +107,7 @@ export const weddingRomantic: TemplateDefinition = {
   slug: "wedding-romantic",
   eventType: "wedding",
   category: "romantic",
+  variant: "classic",
   description: "Suave y romantico con detalles florales",
   previewImage: null,
   defaultConfig: {
@@ -113,6 +122,7 @@ export const weddingRomantic: TemplateDefinition = {
       heading: "Great Vibes",
       body: "Raleway",
     },
+    variant: "classic",
   },
   sectionsOrder: [
     "hero",
@@ -138,6 +148,7 @@ export const xvPrincess: TemplateDefinition = {
   slug: "xv-princess",
   eventType: "xv",
   category: "elegant",
+  variant: "classic",
   description: "Elegante con tonos rosa y dorado",
   previewImage: null,
   defaultConfig: {
@@ -152,6 +163,7 @@ export const xvPrincess: TemplateDefinition = {
       heading: "Great Vibes",
       body: "Poppins",
     },
+    variant: "classic",
   },
   sectionsOrder: [
     "hero",
@@ -174,6 +186,7 @@ export const xvModern: TemplateDefinition = {
   slug: "xv-modern",
   eventType: "xv",
   category: "modern",
+  variant: "modern",
   description: "Fresco y juvenil con colores vibrantes",
   previewImage: null,
   defaultConfig: {
@@ -188,6 +201,7 @@ export const xvModern: TemplateDefinition = {
       heading: "Montserrat",
       body: "Nunito",
     },
+    variant: "modern",
   },
   sectionsOrder: [
     "hero",
@@ -211,6 +225,7 @@ export const baptismAngelic: TemplateDefinition = {
   slug: "baptism-angelic",
   eventType: "baptism",
   category: "elegant",
+  variant: "classic",
   description: "Suave y celestial en tonos celestes",
   previewImage: null,
   defaultConfig: {
@@ -225,6 +240,7 @@ export const baptismAngelic: TemplateDefinition = {
       heading: "Playfair Display",
       body: "Lato",
     },
+    variant: "classic",
   },
   sectionsOrder: [
     "hero",
@@ -243,6 +259,7 @@ export const baptismGarden: TemplateDefinition = {
   slug: "baptism-garden",
   eventType: "baptism",
   category: "nature",
+  variant: "elegant",
   description: "Natural y fresco con tonos verdes",
   previewImage: null,
   defaultConfig: {
@@ -257,6 +274,7 @@ export const baptismGarden: TemplateDefinition = {
       heading: "Cormorant Garamond",
       body: "Nunito",
     },
+    variant: "elegant",
   },
   sectionsOrder: [
     "hero",
@@ -277,6 +295,7 @@ export const birthdayFun: TemplateDefinition = {
   slug: "birthday-fun",
   eventType: "birthday",
   category: "fun",
+  variant: "modern",
   description: "Colorido y divertido para celebrar",
   previewImage: null,
   defaultConfig: {
@@ -291,6 +310,7 @@ export const birthdayFun: TemplateDefinition = {
       heading: "Fredoka One",
       body: "Nunito",
     },
+    variant: "modern",
   },
   sectionsOrder: [
     "hero",
@@ -309,6 +329,7 @@ export const birthdayElegant: TemplateDefinition = {
   slug: "birthday-elegant",
   eventType: "birthday",
   category: "elegant",
+  variant: "elegant",
   description: "Sofisticado para cumpleanos especiales",
   previewImage: null,
   defaultConfig: {
@@ -323,6 +344,7 @@ export const birthdayElegant: TemplateDefinition = {
       heading: "Playfair Display",
       body: "Source Sans Pro",
     },
+    variant: "elegant",
   },
   sectionsOrder: [
     "hero",
@@ -344,6 +366,7 @@ export const graduationAcademic: TemplateDefinition = {
   slug: "graduation-academic",
   eventType: "graduation",
   category: "elegant",
+  variant: "elegant",
   description: "Formal y academico para la ceremonia",
   previewImage: null,
   defaultConfig: {
@@ -358,6 +381,7 @@ export const graduationAcademic: TemplateDefinition = {
       heading: "Merriweather",
       body: "Open Sans",
     },
+    variant: "elegant",
   },
   sectionsOrder: [
     "hero",
@@ -377,6 +401,7 @@ export const graduationModern: TemplateDefinition = {
   slug: "graduation-modern",
   eventType: "graduation",
   category: "modern",
+  variant: "modern",
   description: "Contemporaneo y fresco para celebrar",
   previewImage: null,
   defaultConfig: {
@@ -391,6 +416,7 @@ export const graduationModern: TemplateDefinition = {
       heading: "Montserrat",
       body: "Nunito",
     },
+    variant: "modern",
   },
   sectionsOrder: [
     "hero",

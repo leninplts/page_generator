@@ -39,7 +39,10 @@ async function seed() {
           set: {
             name: template.name,
             category: template.category,
-            defaultConfig: template.defaultConfig,
+            defaultConfig: {
+              ...template.defaultConfig,
+              variant: template.variant,
+            },
             sectionsSchema: template.sectionsOrder.map(
               (sectionType, index) => ({
                 sectionType,

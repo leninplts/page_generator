@@ -3,37 +3,50 @@ interface Props {
   title?: string;
   content?: string;
   imageUrl?: string;
-  colors: { primary: string; secondary: string; background: string; text: string };
+  colors: { primary: string; secondary: string; accent: string; background: string; text: string };
   fonts: { heading: string; body: string };
   altBackground?: boolean;
+  variant?: string;
 }
 
-const { title, content, imageUrl, colors, fonts, altBackground = false } = Astro.props;
+const { title, content, imageUrl, colors, fonts, altBackground = false, variant = 'classic' } = Astro.props;
 const bgColor = altBackground ? colors.secondary : colors.background;
 ---
 
-<section class="py-14 px-6 text-center" style={`background-color: ${bgColor}`}>
-  {title && (
-    <h2
-      class="text-3xl mb-6"
-      style={`font-family: '${fonts.heading}', cursive; color: ${colors.primary}`}
-    >
-      {title}
-    </h2>
-  )}
+<section class="py-20 px-6 text-center" style={`background-color: ${bgColor}`}>
+  <div class="max-w-md mx-auto">
+    {title && (
+      <h2
+        class="text-4xl mb-8"
+        style={`font-family: '${fonts.heading}', cursive; color: ${colors.primary}`}
+      >
+        {title}
+      </h2>
+    )}
 
-  {content && (
-    <p
-      class="text-base leading-relaxed max-w-sm mx-auto"
-      style={`font-family: '${fonts.body}', sans-serif; color: ${colors.text}; opacity: 0.8`}
-    >
-      {content}
-    </p>
-  )}
+    {content && (
+      <p
+        class="text-base leading-relaxed italic"
+        style={`font-family: '${fonts.body}', sans-serif; color: ${colors.text}; opacity: 0.75`}
+      >
+        "{content}"
+      </p>
+    )}
 
-  {imageUrl && (
-    <div class="mt-8 -mx-6 overflow-hidden">
-      <img src={imageUrl} alt={title || 'Historia'} class="w-full h-72 object-cover" loading="lazy" />
-    </div>
-  )}
+    {imageUrl && (
+      <div class="mt-12 -mx-2 relative overflow-hidden rounded-lg">
+        {variant === 'classic' && (
+          <div class="absolute top-0 left-0 right-0 h-6 z-10"
+            style={`background: ${bgColor}; clip-path: polygon(0 0, 100% 0, 100% 30%, 97% 55%, 93% 35%, 88% 50%, 83% 30%, 78% 50%, 72% 35%, 67% 55%, 62% 30%, 57% 45%, 52% 25%, 47% 50%, 42% 35%, 37% 55%, 32% 30%, 27% 50%, 22% 30%, 17% 50%, 12% 35%, 7% 55%, 3% 40%, 0 55%)`}
+          />
+        )}
+        <img src={imageUrl} alt={title || 'Foto'} class="w-full h-72 object-cover" loading="lazy" />
+        {variant === 'classic' && (
+          <div class="absolute bottom-0 left-0 right-0 h-6 z-10 rotate-180"
+            style={`background: ${bgColor}; clip-path: polygon(0 0, 100% 0, 100% 30%, 97% 55%, 93% 35%, 88% 50%, 83% 30%, 78% 50%, 72% 35%, 67% 55%, 62% 30%, 57% 45%, 52% 25%, 47% 50%, 42% 35%, 37% 55%, 32% 30%, 27% 50%, 22% 30%, 17% 50%, 12% 35%, 7% 55%, 3% 40%, 0 55%)`}
+          />
+        )}
+      </div>
+    )}
+  </div>
 </section>

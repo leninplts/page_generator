@@ -1,29 +1,56 @@
 ---
 interface Props {
   description?: string;
-  colors: { primary: string; secondary: string; background: string; text: string };
+  colors: { primary: string; secondary: string; accent: string; background: string; text: string };
   fonts: { heading: string; body: string };
   altBackground?: boolean;
+  variant?: string;
 }
 
-const { description, colors, fonts, altBackground = false } = Astro.props;
+const { description, colors, fonts, altBackground = false, variant = 'classic' } = Astro.props;
 const bgColor = altBackground ? colors.secondary : colors.background;
 ---
 
-<section class="py-14 px-6 text-center" style={`background-color: ${bgColor}`}>
-  <h2
-    class="text-3xl mb-6"
-    style={`font-family: '${fonts.heading}', cursive; color: ${colors.primary}`}
-  >
-    Dress Code
-  </h2>
+<section class="py-20 px-6 text-center" style={`background-color: ${bgColor}`}>
+  <div class="max-w-md mx-auto">
+    {variant === 'classic' && (
+      <div class="mb-4 flex justify-center opacity-20">
+        <svg width="80" height="2" viewBox="0 0 80 2">
+          <line x1="0" y1="1" x2="80" y2="1" stroke={colors.accent} stroke-width="0.5" stroke-dasharray="4 4" />
+        </svg>
+      </div>
+    )}
 
-  {description && (
-    <p
-      class="text-sm leading-relaxed max-w-sm mx-auto"
-      style={`font-family: '${fonts.body}', sans-serif; color: ${colors.text}; opacity: 0.8`}
+    <h2
+      class="text-4xl mb-8"
+      style={`font-family: '${fonts.heading}', cursive; color: ${colors.primary}`}
     >
-      {description}
-    </p>
-  )}
+      Dress Code
+    </h2>
+
+    {/* Icons for classic variant */}
+    {variant === 'classic' && (
+      <div class="flex justify-center gap-12 mb-8 opacity-30">
+        {/* Tie icon */}
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke={colors.text} stroke-width="1">
+          <path d="M12 2L10 6L12 22L14 6L12 2Z" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M10 6L8 8L10 12M14 6L16 8L14 12" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        {/* Dress icon */}
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke={colors.text} stroke-width="1">
+          <path d="M12 2C10 2 8 4 8 4L6 22H18L16 4C16 4 14 2 12 2Z" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M8 4L4 10L8 12M16 4L20 10L16 12" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </div>
+    )}
+
+    {description && (
+      <p
+        class="text-sm leading-relaxed"
+        style={`font-family: '${fonts.body}', sans-serif; color: ${colors.text}; opacity: 0.7`}
+      >
+        {description}
+      </p>
+    )}
+  </div>
 </section>

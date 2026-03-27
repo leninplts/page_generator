@@ -2,24 +2,24 @@
 
 ## Resumen de Fases
 
-| Fase      | Nombre                       | Historias | Tareas  | Complejidad |                                  Estado                                   |
-| --------- | ---------------------------- | :-------: | :-----: | :---------: | :-----------------------------------------------------------------------: |
-| F0        | Fundacion y Arquitectura     |     1     |    8    |    Media    |                               ✅ Completada                               |
-| F1        | Core — Gestion de Eventos    |     4     |   27    |    Alta     | 🔄 En progreso (HU-001 ✅, HU-002 ✅, HU-003 pendiente, HU-004 pendiente) |
-| F2        | Templates y Personalizacion  |     3     |   25    |  Muy Alta   |                                 Pendiente                                 |
-| F3        | Multimedia                   |     3     |   21    |    Alta     |                                 Pendiente                                 |
-| F4        | Pagina Publica de Invitacion |     4     |   27    |  Muy Alta   |                                 Pendiente                                 |
-| F5        | Compartir y Distribucion     |     2     |   12    |    Media    |                                 Pendiente                                 |
-| F6        | Analytics y Gestion Avanzada |     2     |   10    |    Media    |                                 Pendiente                                 |
-| F7        | Admin Panel                  |     1     |    5    |    Media    |                                 Pendiente                                 |
-| F8        | Monetizacion (Futuro)        |     1     |    4    |    Media    |                                 Pendiente                                 |
-| **TOTAL** |                              |  **21**   | **139** |             |                                                                           |
+| Fase      | Nombre                       | Historias | Tareas  | Complejidad |                              Estado                              |
+| --------- | ---------------------------- | :-------: | :-----: | :---------: | :--------------------------------------------------------------: |
+| F0        | Fundacion y Arquitectura     |     1     |    8    |    Media    |                          ✅ Completada                           |
+| F1        | Core — Gestion de Eventos    |     4     |   27    |    Alta     | 🔄 En progreso (HU-001 ✅, HU-002 ✅, HU-003 ✅, HU-004 parcial) |
+| F2        | Templates y Personalizacion  |     3     |   25    |  Muy Alta   |                            Pendiente                             |
+| F3        | Multimedia                   |     3     |   21    |    Alta     |                            Pendiente                             |
+| F4        | Pagina Publica de Invitacion |     4     |   27    |  Muy Alta   |                            Pendiente                             |
+| F5        | Compartir y Distribucion     |     2     |   12    |    Media    |                            Pendiente                             |
+| F6        | Analytics y Gestion Avanzada |     2     |   10    |    Media    |                            Pendiente                             |
+| F7        | Admin Panel                  |     1     |    5    |    Media    |                            Pendiente                             |
+| F8        | Monetizacion (Futuro)        |     1     |    4    |    Media    |                            Pendiente                             |
+| **TOTAL** |                              |  **21**   | **139** |             |                                                                  |
 
 ## Progreso General
 
-- **Tareas completadas:** ~22 de 139 (F0: 8/8, F1-HU001: 5/6, F1-HU002: 4/7)
-- **Porcentaje:** ~16%
-- **Fase actual:** F1 — Core (HU-003 y HU-004 pendientes)
+- **Tareas completadas:** ~32 de 139 (F0: 8/8, F1-HU001: 5/6, F1-HU002: 4/7, F1-HU003: 7/8, F1-HU004: 2/9)
+- **Porcentaje:** ~23%
+- **Fase actual:** F1 — Core (HU-004 formularios dinamicos por tipo pendiente, T-003.4 seleccion template pendiente)
 
 ## MVP Minimo Viable
 
@@ -124,14 +124,14 @@ F0 (Setup)
 
 | Tarea   | Descripcion                                              | Estado |
 | ------- | -------------------------------------------------------- | :----: |
-| T-003.1 | Implementar wizard/stepper de creacion de evento         |  [ ]   |
-| T-003.2 | Paso 1: Seleccion de tipo de evento (cards visuales)     |  [ ]   |
-| T-003.3 | Paso 2: Datos basicos del evento (nombre, fecha, hora)   |  [ ]   |
+| T-003.1 | Implementar wizard/stepper de creacion de evento         |  [x]   |
+| T-003.2 | Paso 1: Seleccion de tipo de evento (cards visuales)     |  [x]   |
+| T-003.3 | Paso 2: Datos basicos del evento (nombre, fecha, hora)   |  [x]   |
 | T-003.4 | Paso 3: Seleccion de template/diseno                     |  [ ]   |
-| T-003.5 | Implementar modelo de datos de evento en backend         |  [ ]   |
-| T-003.6 | API endpoint para crear evento                           |  [ ]   |
-| T-003.7 | Validaciones de campos obligatorios segun tipo de evento |  [ ]   |
-| T-003.8 | Generar slug/URL unica para el evento                    |  [ ]   |
+| T-003.5 | Implementar modelo de datos de evento en backend         |  [x]   |
+| T-003.6 | API endpoint para crear evento                           |  [x]   |
+| T-003.7 | Validaciones de campos obligatorios segun tipo de evento |  [x]   |
+| T-003.8 | Generar slug/URL unica para el evento                    |  [x]   |
 
 **Criterios de aceptacion:**
 
@@ -148,14 +148,14 @@ F0 (Setup)
 
 | Tarea   | Descripcion                                                            | Estado |
 | ------- | ---------------------------------------------------------------------- | :----: |
-| T-004.1 | Definir schema de campos por tipo de evento (JSON/Zod)                 |  [ ]   |
+| T-004.1 | Definir schema de campos por tipo de evento (JSON/Zod)                 |  [x]   |
 | T-004.2 | Implementar motor de formularios dinamicos                             |  [ ]   |
 | T-004.3 | Campos de Boda: novios, padrinos, ceremonia religiosa, mesa de regalos |  [ ]   |
 | T-004.4 | Campos de XV Anos: quinceaenra, chambelanes, padrinos, vals            |  [ ]   |
 | T-004.5 | Campos de Bautizo: bebe, padres, padrinos, iglesia                     |  [ ]   |
 | T-004.6 | Campos de Cumpleanos: festejado, edad, tematica                        |  [ ]   |
 | T-004.7 | Campos de Graduacion: graduado, institucion, carrera, acto             |  [ ]   |
-| T-004.8 | Validaciones especificas por tipo                                      |  [ ]   |
+| T-004.8 | Validaciones especificas por tipo                                      |  [x]   |
 | T-004.9 | Persistencia parcial (guardar progreso/borrador)                       |  [ ]   |
 
 **Criterios de aceptacion:**

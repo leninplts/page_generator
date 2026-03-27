@@ -1,0 +1,134 @@
+---
+import DashboardLayout from '../../../layouts/DashboardLayout.astro';
+import { db } from '../../../lib/db';
+import { events, eventSections } from '../../../lib/db/schema';
+import { eq, and, asc } from 'drizzle-orm';
+
+export const prerender = false;
+
+const user = Astro.locals.user;
+const { id } = Astro.params;
+
+if (!user) {
+  return Astro.redirect('/auth/login');
+}
+
+// Fetch event
+const [event] = await db
+  .select()
+  .from(events)
+  .where(and(eq(events.id, id!), eq(events.userId, user.id)));
+
+if (!event) {
+  return Astro.redirect('/dashboard');
+}
+
+// Fetch sections
+const sections = await db
+  .select()
+  .from(eventSections)
+  .where(eq(eventSections.eventId, event.id))
+  .orderBy(asc(eventSections.order));
+
+const eventTypeLabels: Record<string, string> = {
+  birthday: 'Cumpleanos',
+  xv: 'XV Anos',
+  baptism: 'Bautizo',
+  wedding: 'Boda',
+  graduation: 'Graduacion',
+};
+
+const statusLabels: Record<string, { label: string; class: string }> = {
+  draft: { label: 'Borrador', class: 'bg-amber-50 text-amber-700' },
+  published: { label: 'Publicado', class: 'bg-green-50 text-green-700' },
+  archived: { label: 'Archivado', class: 'bg-slate-100 text-slate-600' },
+};
+
+const sectionLabels: Record<string, { label: string; icon: string }> = {
+  hero: { label: 'Portada', icon: '🖼️' },
+  countdown: { label: 'Cuenta Regresiva', icon: '⏰' },
+  story: { label: 'Nuestra Historia', icon: '📖' },
+  ceremony: { label: 'Ceremonia', icon: '⛪' },
+  reception: { label: 'Recepcion', icon: '🎉' },
+  godparents: { label: 'Padrinos y Familia', icon: '👨‍👩‍👧‍👦' },
+  gallery: { label: 'Galeria', icon: '📸' },
+  video: { label: 'Video', icon: '🎬' },
+  itinerary: { label: 'Itinerario', icon: '📋' },
+  dresscode: { label: 'Codigo de Vestimenta', icon: '👔' },
+  entertainment: { label: 'Amenidades', icon: '🎵' },
+  gifts: { label: 'Mesa de Regalos', icon: '🎁' },
+  rsvp: { label: 'Confirmacion', icon: '✉️' },
+  message: { label: 'Mensaje', icon: '💌' },
+  music: { label: 'Musica de Fondo', icon: '🎶' },
+};
+
+const statusInfo = statusLabels[event.status] || statusLabels.draft;
+---
+
+<DashboardLayout title={event.title}>
+  <div class="mb-6 flex items-center justify-between">
+    <a href="/dashboard" class="inline-flex items-center text-sm text-slate-500 hover:text-slate-700 transition-colors">
+      <svg class="mr-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+      </svg>
+      Volver a mis eventos
+    </a>
+    <span class={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ${statusInfo.class}`}>
+      {statusInfo.label}
+    </span>
+  </div>
+
+  {/* Event Info Header */}
+  <div class="mb-8 rounded-xl border border-slate-200 bg-white p-6">
+    <div class="flex items-center gap-3 mb-4">
+      <span class="text-sm font-medium text-slate-500 uppercase tracking-wide">
+        {eventTypeLabels[event.eventType] || event.eventType}
+      </span>
+    </div>
+    <h2 class="text-2xl font-bold text-slate-900">{event.title}</h2>
+    {event.eventDate && (
+      <p class="mt-1 text-slate-600">
+        {new Date(event.eventDate + 'T00:00:00').toLocaleDateString('es-ES', {
+          weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+        })}
+        {event.eventTime && ` a las ${event.eventTime} hrs`}
+      </p>
+    )}
+    <p class="mt-2 text-sm text-slate-400">
+      URL: /e/{event.slug}
+    </p>
+  </div>
+
+  {/* Sections List */}
+  <div class="mb-4">
+    <h3 class="text-lg font-semibold text-slate-900">Secciones de la invitacion</h3>
+    <p class="text-sm text-slate-500">
+      El editor completo de secciones estara disponible proximamente. Por ahora puedes ver las secciones configuradas.
+    </p>
+  </div>
+
+  <div class="space-y-2">
+    {sections.map((section) => {
+      const info = sectionLabels[section.sectionType] || { label: section.sectionType, icon: '📄' };
+      return (
+        <div class={`flex items-center gap-3 rounded-lg border p-4 transition-colors ${
+          section.isActive
+            ? 'border-slate-200 bg-white'
+            : 'border-slate-100 bg-slate-50 opacity-60'
+        }`}>
+          <span class="text-xl">{info.icon}</span>
+          <div class="flex-1">
+            <p class="text-sm font-medium text-slate-900">{info.label}</p>
+          </div>
+          <span class={`text-xs font-medium px-2 py-0.5 rounded-full ${
+            section.isActive
+              ? 'bg-green-50 text-green-700'
+              : 'bg-slate-100 text-slate-500'
+          }`}>
+            {section.isActive ? 'Activa' : 'Inactiva'}
+          </span>
+        </div>
+      );
+    })}
+  </div>
+</DashboardLayout>

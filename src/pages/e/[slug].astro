@@ -1,0 +1,21 @@
+---
+import PublicLayout from '../../layouts/PublicLayout.astro';
+
+export const prerender = false;
+
+const { slug } = Astro.params;
+
+// TODO: Fetch event data from database by slug
+// For now, show a placeholder
+---
+
+<PublicLayout
+  title="Invitacion"
+  description="Estas invitado a un evento especial"
+>
+  <div class="flex flex-col items-center justify-center min-h-screen text-center p-6">
+    <h1 class="text-3xl font-bold text-slate-900 mb-4">Invitacion</h1>
+    <p class="text-slate-600">Evento: {slug}</p>
+    <p class="text-sm text-slate-400 mt-4">Proximamente...</p>
+  </div>
+</PublicLayout>

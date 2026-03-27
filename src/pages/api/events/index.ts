@@ -1,6 +1,11 @@
 import type { APIRoute } from "astro";
 import { db } from "../../../lib/db";
-import { events, eventSections, sectionTypeEnum } from "../../../lib/db/schema";
+import {
+  events,
+  eventSections,
+  templates,
+  sectionTypeEnum,
+} from "../../../lib/db/schema";
 import { createEventSchema } from "../../../lib/validators/events";
 import { generateUniqueSlug } from "../../../lib/utils";
 import { eq, desc } from "drizzle-orm";
@@ -50,8 +55,30 @@ export const POST: APIRoute = async ({ locals, request }) => {
       );
     }
 
-    const { eventType, title, eventDate, eventTime, timezone } = parsed.data;
+    const { eventType, title, eventDate, eventTime, timezone, templateId } =
+      parsed.data;
     const slug = generateUniqueSlug(title);
+
+    // If a template is selected, fetch it for defaultConfig and sectionsSchema
+    let templateConfig: Record<string, unknown> = {};
+    let templateSections: Record<string, unknown>[] | null = null;
+
+    if (templateId) {
+      const [template] = await db
+        .select()
+        .from(templates)
+        .where(eq(templates.id, templateId))
+        .limit(1);
+
+      if (template) {
+        templateConfig =
+          (template.defaultConfig as Record<string, unknown>) ?? {};
+        const sections = template.sectionsSchema as Record<string, unknown>[];
+        if (sections && sections.length > 0) {
+          templateSections = sections;
+        }
+      }
+    }
 
     // Create the event
     const [newEvent] = await db
@@ -65,24 +92,48 @@ export const POST: APIRoute = async ({ locals, request }) => {
         eventDate: eventDate || null,
         eventTime: eventTime || null,
         timezone,
+        templateId: templateId || null,
+        customConfig:
+          Object.keys(templateConfig).length > 0 ? templateConfig : {},
       })
       .returning();
 
-    // Create default sections based on event type
+    // Create sections: use template's sectionsSchema if available, else default
     const eventTypeConfig = EVENT_TYPES[eventType];
-    const allSections = [
-      ...eventTypeConfig.requiredSections,
-      ...eventTypeConfig.optionalSections,
-    ];
+    let sectionsToInsert: {
+      eventId: string;
+      sectionType: (typeof sectionTypeEnum.enumValues)[number];
+      order: number;
+      isActive: boolean;
+      config: Record<string, unknown>;
+      content: Record<string, unknown>;
+    }[];
 
-    const sectionsToInsert = allSections.map((sectionType, index) => ({
-      eventId: newEvent.id,
-      sectionType: sectionType as (typeof sectionTypeEnum.enumValues)[number],
-      order: index,
-      isActive: eventTypeConfig.requiredSections.includes(sectionType),
-      config: {},
-      content: {},
-    }));
+    if (templateSections) {
+      sectionsToInsert = templateSections.map((section, index) => ({
+        eventId: newEvent.id,
+        sectionType:
+          section.sectionType as string as (typeof sectionTypeEnum.enumValues)[number],
+        order: index,
+        isActive: section.isActive !== false,
+        config: (section.config as Record<string, unknown>) ?? {},
+        content: (section.content as Record<string, unknown>) ?? {},
+      }));
+    } else {
+      const allSections = [
+        ...eventTypeConfig.requiredSections,
+        ...eventTypeConfig.optionalSections,
+      ];
+
+      sectionsToInsert = allSections.map((sectionType, index) => ({
+        eventId: newEvent.id,
+        sectionType: sectionType as (typeof sectionTypeEnum.enumValues)[number],
+        order: index,
+        isActive: eventTypeConfig.requiredSections.includes(sectionType),
+        config: {},
+        content: {},
+      }));
+    }
 
     if (sectionsToInsert.length > 0) {
       await db.insert(eventSections).values(sectionsToInsert);

@@ -25,6 +25,7 @@ export const createEventSchema = z.object({
     .string()
     .regex(/^\d{2}:\d{2}$/, "Formato de hora invalido (HH:MM)")
     .optional(),
+  templateId: z.string().uuid().optional(),
   timezone: z.string().default("America/La_Paz"),
 });
 

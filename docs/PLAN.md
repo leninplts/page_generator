@@ -17,9 +17,9 @@
 
 ## Progreso General
 
-- **Tareas completadas:** ~36 de 139 (F0: 8/8, F1-HU001: 5/6, F1-HU002: 5/7, F1-HU003: 7/8, F1-HU004: 2/9, F2-HU005: 2/7)
-- **Porcentaje:** ~26%
-- **Fase actual:** F2 — Templates (arquitectura + 11 templates definidos + seed + API. Falta galeria, personalizacion, editor de secciones)
+- **Tareas completadas:** ~43 de 139 (F0: 8/8, F1: 19/27, F2-HU005: 5/7, F2-HU007: 2/17)
+- **Porcentaje:** ~31%
+- **Fase actual:** F2 — Templates (galeria + seleccion en wizard + editor de secciones con drag&drop. Falta personalizacion visual y editor de contenido por seccion)
 
 ## MVP Minimo Viable
 
@@ -178,10 +178,10 @@ F0 (Setup)
 | T-005.1 | Definir arquitectura de templates (como se almacenan/renderizan)     |  [x]   |
 | T-005.2 | Crear sistema de template engine (renderizado dinamico)              |  [ ]   |
 | T-005.3 | Disenar e implementar 2-3 templates por tipo de evento (10-15 total) |  [x]   |
-| T-005.4 | Implementar galeria de templates con preview                         |  [ ]   |
-| T-005.5 | Implementar filtrado de templates por tipo de evento                 |  [ ]   |
+| T-005.4 | Implementar galeria de templates con preview                         |  [x]   |
+| T-005.5 | Implementar filtrado de templates por tipo de evento                 |  [x]   |
 | T-005.6 | Preview del template con datos de ejemplo                            |  [ ]   |
-| T-005.7 | Sistema de categorias/tags (elegante, moderno, minimalista, etc.)    |  [ ]   |
+| T-005.7 | Sistema de categorias/tags (elegante, moderno, minimalista, etc.)    |  [x]   |
 
 **Criterios de aceptacion:**
 
@@ -223,8 +223,8 @@ F0 (Setup)
 
 | Tarea    | Descripcion                                                 | Estado |
 | -------- | ----------------------------------------------------------- | :----: |
-| T-007.1  | Implementar lista de secciones arrastrables (drag & drop)   |  [ ]   |
-| T-007.2  | Toggle de activar/desactivar por seccion                    |  [ ]   |
+| T-007.1  | Implementar lista de secciones arrastrables (drag & drop)   |  [x]   |
+| T-007.2  | Toggle de activar/desactivar por seccion                    |  [x]   |
 | T-007.3  | Cada seccion expandible para editar su contenido            |  [ ]   |
 | T-007.4  | Seccion Hero: imagen principal, titulo, subtitulo           |  [ ]   |
 | T-007.5  | Seccion Countdown: seleccion de estilo de countdown         |  [ ]   |

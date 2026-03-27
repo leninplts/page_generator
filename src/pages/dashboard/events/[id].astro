@@ -1,5 +1,6 @@
 ---
 import DashboardLayout from '../../../layouts/DashboardLayout.astro';
+import { SectionEditor } from '../../../components/editor/SectionEditor';
 import { db } from '../../../lib/db';
 import { events, eventSections } from '../../../lib/db/schema';
 import { eq, and, asc } from 'drizzle-orm';
@@ -13,7 +14,6 @@ if (!user) {
   return Astro.redirect('/auth/login');
 }
 
-// Fetch event
 const [event] = await db
   .select()
   .from(events)
@@ -23,7 +23,6 @@ if (!event) {
   return Astro.redirect('/dashboard');
 }
 
-// Fetch sections
 const sections = await db
   .select()
   .from(eventSections)
@@ -44,25 +43,17 @@ const statusLabels: Record<string, { label: string; class: string }> = {
   archived: { label: 'Archivado', class: 'bg-slate-100 text-slate-600' },
 };
 
-const sectionLabels: Record<string, { label: string; icon: string }> = {
-  hero: { label: 'Portada', icon: '🖼️' },
-  countdown: { label: 'Cuenta Regresiva', icon: '⏰' },
-  story: { label: 'Nuestra Historia', icon: '📖' },
-  ceremony: { label: 'Ceremonia', icon: '⛪' },
-  reception: { label: 'Recepcion', icon: '🎉' },
-  godparents: { label: 'Padrinos y Familia', icon: '👨‍👩‍👧‍👦' },
-  gallery: { label: 'Galeria', icon: '📸' },
-  video: { label: 'Video', icon: '🎬' },
-  itinerary: { label: 'Itinerario', icon: '📋' },
-  dresscode: { label: 'Codigo de Vestimenta', icon: '👔' },
-  entertainment: { label: 'Amenidades', icon: '🎵' },
-  gifts: { label: 'Mesa de Regalos', icon: '🎁' },
-  rsvp: { label: 'Confirmacion', icon: '✉️' },
-  message: { label: 'Mensaje', icon: '💌' },
-  music: { label: 'Musica de Fondo', icon: '🎶' },
-};
-
 const statusInfo = statusLabels[event.status] || statusLabels.draft;
+
+// Serialize sections for React (remove Date objects that can't cross the boundary)
+const serializedSections = sections.map(s => ({
+  id: s.id,
+  sectionType: s.sectionType,
+  order: s.order,
+  isActive: s.isActive,
+  config: s.config,
+  content: s.content,
+}));
 ---
 
 <DashboardLayout title={event.title}>
@@ -94,41 +85,13 @@ const statusInfo = statusLabels[event.status] || statusLabels.draft;
         {event.eventTime && ` a las ${event.eventTime} hrs`}
       </p>
     )}
-    <p class="mt-2 text-sm text-slate-400">
-      URL: /e/{event.slug}
-    </p>
+    <p class="mt-2 text-sm text-slate-400">URL: /e/{event.slug}</p>
   </div>
 
-  {/* Sections List */}
-  <div class="mb-4">
-    <h3 class="text-lg font-semibold text-slate-900">Secciones de la invitacion</h3>
-    <p class="text-sm text-slate-500">
-      El editor completo de secciones estara disponible proximamente. Por ahora puedes ver las secciones configuradas.
-    </p>
-  </div>
-
-  <div class="space-y-2">
-    {sections.map((section) => {
-      const info = sectionLabels[section.sectionType] || { label: section.sectionType, icon: '📄' };
-      return (
-        <div class={`flex items-center gap-3 rounded-lg border p-4 transition-colors ${
-          section.isActive
-            ? 'border-slate-200 bg-white'
-            : 'border-slate-100 bg-slate-50 opacity-60'
-        }`}>
-          <span class="text-xl">{info.icon}</span>
-          <div class="flex-1">
-            <p class="text-sm font-medium text-slate-900">{info.label}</p>
-          </div>
-          <span class={`text-xs font-medium px-2 py-0.5 rounded-full ${
-            section.isActive
-              ? 'bg-green-50 text-green-700'
-              : 'bg-slate-100 text-slate-500'
-          }`}>
-            {section.isActive ? 'Activa' : 'Inactiva'}
-          </span>
-        </div>
-      );
-    })}
-  </div>
+  {/* Section Editor */}
+  <SectionEditor
+    client:load
+    eventId={event.id}
+    initialSections={serializedSections}
+  />
 </DashboardLayout>

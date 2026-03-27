@@ -1,14 +1,7 @@
 ---
-import DashboardLayout from '../layouts/DashboardLayout.astro';
+// Root page: redirect to dashboard if logged in, otherwise to login
+if (Astro.locals.user) {
+  return Astro.redirect('/dashboard');
+}
+return Astro.redirect('/auth/login');
 ---
-
-<DashboardLayout title="Inicio">
-  <div class="flex flex-col items-center justify-center min-h-[60vh] text-center">
-    <h1 class="text-4xl font-bold text-slate-900 mb-4">
-      Page Generator
-    </h1>
-    <p class="text-lg text-slate-600 max-w-md">
-      Crea invitaciones digitales hermosas para tus eventos especiales.
-    </p>
-  </div>
-</DashboardLayout>

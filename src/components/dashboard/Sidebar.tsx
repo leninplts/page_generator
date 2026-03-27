@@ -85,25 +85,6 @@ const topNav = [
       </svg>
     ),
   },
-  {
-    name: "Mi Cuenta",
-    href: "/dashboard/account",
-    icon: (
-      <svg
-        className="h-5 w-5"
-        fill="none"
-        viewBox="0 0 24 24"
-        strokeWidth="1.5"
-        stroke="currentColor"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-        />
-      </svg>
-    ),
-  },
 ];
 
 export function Sidebar({ userName, userEmail, currentPath }: SidebarProps) {
@@ -162,7 +143,7 @@ export function Sidebar({ userName, userEmail, currentPath }: SidebarProps) {
       {/* Sidebar */}
       <aside
         className={clsx(
-          "fixed inset-y-0 left-0 z-40 flex w-[72px] flex-col items-center bg-white py-6 transition-transform duration-300 lg:static lg:translate-x-0",
+          "fixed inset-y-0 left-0 z-40 flex w-[72px] flex-col items-center bg-white py-6 transition-transform duration-300 lg:sticky lg:top-0 lg:h-screen lg:translate-x-0",
           isOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
@@ -212,8 +193,20 @@ export function Sidebar({ userName, userEmail, currentPath }: SidebarProps) {
           })}
         </nav>
 
-        {/* Bottom actions */}
-        <div className="flex flex-col items-center gap-2 mt-auto">
+        {/* Bottom section */}
+        <div className="flex flex-col items-center gap-2 mt-auto border-t border-slate-100 pt-4">
+          {/* User avatar */}
+          <a
+            href="/dashboard/account"
+            className="group relative flex h-10 w-10 items-center justify-center rounded-full bg-orange-100 text-sm font-semibold text-orange-600 transition-all hover:ring-2 hover:ring-orange-500/30"
+          >
+            {userName.charAt(0).toUpperCase()}
+            <span className="pointer-events-none absolute left-full ml-3 whitespace-nowrap rounded-lg bg-slate-900 px-3 py-1.5 text-xs font-medium text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
+              {userName}
+            </span>
+          </a>
+
+          {/* Settings */}
           <a
             href="/dashboard/account"
             className="group relative flex h-10 w-10 items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-all"
@@ -240,6 +233,8 @@ export function Sidebar({ userName, userEmail, currentPath }: SidebarProps) {
               Configuracion
             </span>
           </a>
+
+          {/* Logout */}
           <button
             onClick={handleLogout}
             className="group relative flex h-10 w-10 items-center justify-center rounded-xl text-slate-400 hover:bg-red-50 hover:text-red-600 transition-all"

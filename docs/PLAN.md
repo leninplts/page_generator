@@ -6,7 +6,7 @@
 | --------- | ---------------------------- | :-------: | :-----: | :---------: | :-----------------------------------------------------------------------------------------------------------------: |
 | F0        | Fundacion y Arquitectura     |     1     |    8    |    Media    |                                                    ✅ Completada                                                    |
 | F1        | Core — Gestion de Eventos    |     4     |   27    |    Alta     | ✅ Completada (HU-001 90%, HU-002 85%, HU-003 ✅, HU-004 ✅) — T-001.3/T-001.4 diferidos, T-002.3/T-002.4 diferidos |
-| F2        | Templates y Personalizacion  |     3     |   25    |  Muy Alta   |                                 🔄 En progreso (HU-005 85%, HU-006 0%, HU-007 15%)                                  |
+| F2        | Templates y Personalizacion  |     3     |   25    |  Muy Alta   |           ✅ Completada (HU-005 85%, HU-006 75%, HU-007 ✅) — T-005.2/T-006.4/T-006.5/T-006.7-9 diferidos           |
 | F3        | Multimedia                   |     3     |   21    |    Alta     |                                                      Pendiente                                                      |
 | F4        | Pagina Publica de Invitacion |     4     |   27    |  Muy Alta   |                           🟡 Iniciada prematuramente (35% — base funcional sin contenido)                           |
 | F5        | Compartir y Distribucion     |     2     |   12    |    Media    |                                                      Pendiente                                                      |
@@ -17,11 +17,12 @@
 
 ## Progreso General
 
-- **Tareas completadas:** ~57 de 139
-- **Porcentaje:** ~41%
-- **Fase actual:** F1 CERRADA. Siguiente: F2 (Templates y Personalizacion)
-- **Diferidos de F1:** T-001.3 (recuperar contrasena), T-001.4 (login Google), T-002.3 (filtros), T-002.4 (busqueda funcional)
-- **Nota:** F4 se inicio prematuramente (pagina publica base funcional). Se cerrara en orden despues de F2 y F3.
+- **Tareas completadas:** ~77 de 139
+- **Porcentaje:** ~55%
+- **Fase actual:** F2 CERRADA. Siguiente: F3 (Multimedia)
+- **Diferidos de F1:** T-001.3 (recuperar contrasena), T-001.4 (login Google), T-002.3 (filtros), T-002.4 (busqueda)
+- **Diferidos de F2:** T-005.2 (template engine layouts), T-006.4/5 (tamanos/layout), T-006.7-9 (preview movil/presets/reset)
+- **Nota:** F4 iniciada prematuramente. Se cerrara despues de F3.
 
 ## MVP Minimo Viable
 
@@ -200,12 +201,12 @@ F0 (Setup)
 
 | Tarea   | Descripcion                                                                | Estado |
 | ------- | -------------------------------------------------------------------------- | :----: |
-| T-006.1 | Implementar panel de personalizacion (sidebar derecho)                     |  [ ]   |
-| T-006.2 | Selector de paleta de colores (primario, secundario, acento, fondo, texto) |  [ ]   |
-| T-006.3 | Selector de tipografias (Google Fonts integration)                         |  [ ]   |
+| T-006.1 | Implementar panel de personalizacion (sidebar derecho)                     |  [x]   |
+| T-006.2 | Selector de paleta de colores (primario, secundario, acento, fondo, texto) |  [x]   |
+| T-006.3 | Selector de tipografias (Google Fonts integration)                         |  [x]   |
 | T-006.4 | Ajuste de tamanos de texto (headings, body)                                |  [ ]   |
 | T-006.5 | Opciones de layout por seccion (centrado, lateral, full-width)             |  [ ]   |
-| T-006.6 | Preview en vivo (split view: editor + preview)                             |  [ ]   |
+| T-006.6 | Preview en vivo (split view: editor + preview)                             |  [x]   |
 | T-006.7 | Opcion de preview en movil (iframe responsive)                             |  [ ]   |
 | T-006.8 | Guardar configuracion visual como preset reutilizable                      |  [ ]   |
 | T-006.9 | Reset a valores por defecto del template                                   |  [ ]   |
@@ -227,21 +228,21 @@ F0 (Setup)
 | -------- | ----------------------------------------------------------- | :----: |
 | T-007.1  | Implementar lista de secciones arrastrables (drag & drop)   |  [x]   |
 | T-007.2  | Toggle de activar/desactivar por seccion                    |  [x]   |
-| T-007.3  | Cada seccion expandible para editar su contenido            |  [ ]   |
-| T-007.4  | Seccion Hero: imagen principal, titulo, subtitulo           |  [ ]   |
-| T-007.5  | Seccion Countdown: seleccion de estilo de countdown         |  [ ]   |
-| T-007.6  | Seccion Ceremonia: lugar, direccion, hora, mapa embed       |  [ ]   |
-| T-007.7  | Seccion Recepcion: lugar, direccion, hora, mapa embed       |  [ ]   |
-| T-007.8  | Seccion Padrinos/Familia: nombre, foto, rol                 |  [ ]   |
-| T-007.9  | Seccion Galeria: upload multiple, reordenar, eliminar       |  [ ]   |
-| T-007.10 | Seccion Video: URL de YouTube/Vimeo o upload                |  [ ]   |
-| T-007.11 | Seccion Itinerario: timeline con hora + actividad           |  [ ]   |
-| T-007.12 | Seccion Dress Code: color swatches + texto                  |  [ ]   |
-| T-007.13 | Seccion Amenidades: nombre, foto, tipo (DJ, banda, etc.)    |  [ ]   |
-| T-007.14 | Seccion Mesa de Regalos: links + texto descriptivo          |  [ ]   |
-| T-007.15 | Seccion RSVP: formulario configurable                       |  [ ]   |
-| T-007.16 | Seccion Mensaje: rich text editor simple                    |  [ ]   |
-| T-007.17 | Preview actualizado en tiempo real con cambios de secciones |  [ ]   |
+| T-007.3  | Cada seccion expandible para editar su contenido            |  [x]   |
+| T-007.4  | Seccion Hero: imagen principal, titulo, subtitulo           |  [x]   |
+| T-007.5  | Seccion Countdown: seleccion de estilo de countdown         |  [x]   |
+| T-007.6  | Seccion Ceremonia: lugar, direccion, hora, mapa embed       |  [x]   |
+| T-007.7  | Seccion Recepcion: lugar, direccion, hora, mapa embed       |  [x]   |
+| T-007.8  | Seccion Padrinos/Familia: nombre, foto, rol                 |  [x]   |
+| T-007.9  | Seccion Galeria: upload multiple, reordenar, eliminar       |  [x]   |
+| T-007.10 | Seccion Video: URL de YouTube/Vimeo o upload                |  [x]   |
+| T-007.11 | Seccion Itinerario: timeline con hora + actividad           |  [x]   |
+| T-007.12 | Seccion Dress Code: color swatches + texto                  |  [x]   |
+| T-007.13 | Seccion Amenidades: nombre, foto, tipo (DJ, banda, etc.)    |  [x]   |
+| T-007.14 | Seccion Mesa de Regalos: links + texto descriptivo          |  [x]   |
+| T-007.15 | Seccion RSVP: formulario configurable                       |  [x]   |
+| T-007.16 | Seccion Mensaje: rich text editor simple                    |  [x]   |
+| T-007.17 | Preview actualizado en tiempo real con cambios de secciones |  [x]   |
 
 **Criterios de aceptacion:**
 

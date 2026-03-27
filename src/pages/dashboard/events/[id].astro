@@ -1,6 +1,7 @@
 ---
 import DashboardLayout from '../../../layouts/DashboardLayout.astro';
 import { SectionEditor } from '../../../components/editor/SectionEditor';
+import { CustomizationPanel } from '../../../components/editor/CustomizationPanel';
 import { db } from '../../../lib/db';
 import { events, eventSections } from '../../../lib/db/schema';
 import { eq, and, asc } from 'drizzle-orm';
@@ -30,11 +31,8 @@ const sections = await db
   .orderBy(asc(eventSections.order));
 
 const eventTypeLabels: Record<string, string> = {
-  birthday: 'Cumpleanos',
-  xv: 'XV Anos',
-  baptism: 'Bautizo',
-  wedding: 'Boda',
-  graduation: 'Graduacion',
+  birthday: 'Cumpleanos', xv: 'XV Anos', baptism: 'Bautizo',
+  wedding: 'Boda', graduation: 'Graduacion',
 };
 
 const statusLabels: Record<string, { label: string; class: string }> = {
@@ -45,7 +43,6 @@ const statusLabels: Record<string, { label: string; class: string }> = {
 
 const statusInfo = statusLabels[event.status] || statusLabels.draft;
 
-// Serialize sections for React (remove Date objects that can't cross the boundary)
 const serializedSections = sections.map(s => ({
   id: s.id,
   sectionType: s.sectionType,
@@ -54,6 +51,22 @@ const serializedSections = sections.map(s => ({
   config: s.config,
   content: s.content,
 }));
+
+// Parse customConfig with defaults
+const rawConfig = (event.customConfig || {}) as Record<string, any>;
+const customConfig = {
+  colors: {
+    primary: rawConfig.colors?.primary || '#6366f1',
+    secondary: rawConfig.colors?.secondary || '#e0e7ff',
+    accent: rawConfig.colors?.accent || '#818cf8',
+    background: rawConfig.colors?.background || '#ffffff',
+    text: rawConfig.colors?.text || '#1e293b',
+  },
+  fonts: {
+    heading: rawConfig.fonts?.heading || 'Playfair Display',
+    body: rawConfig.fonts?.body || 'Lato',
+  },
+};
 ---
 
 <DashboardLayout title={event.title}>
@@ -64,17 +77,32 @@ const serializedSections = sections.map(s => ({
       </svg>
       Volver a mis eventos
     </a>
-    <span class={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ${statusInfo.class}`}>
-      {statusInfo.label}
-    </span>
+    <div class="flex items-center gap-2">
+      <a
+        href={`/e/${event.slug}?preview=true`}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+      >
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+        Vista previa
+      </a>
+      <span class={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ${statusInfo.class}`}>
+        {statusInfo.label}
+      </span>
+    </div>
   </div>
 
   {/* Event Info Header */}
-  <div class="mb-8 rounded-xl border border-slate-200 bg-white p-6">
-    <div class="flex items-center gap-3 mb-4">
-      <span class="text-sm font-medium text-slate-500 uppercase tracking-wide">
+  <div class="mb-6 rounded-2xl border border-slate-200 bg-white p-6">
+    <div class="flex items-center justify-between mb-2">
+      <span class="text-xs font-medium text-slate-500 uppercase tracking-wide">
         {eventTypeLabels[event.eventType] || event.eventType}
       </span>
+      <p class="text-xs text-slate-400">URL: /e/{event.slug}</p>
     </div>
     <h2 class="text-2xl font-bold text-slate-900">{event.title}</h2>
     {event.eventDate && (
@@ -85,7 +113,15 @@ const serializedSections = sections.map(s => ({
         {event.eventTime && ` a las ${event.eventTime} hrs`}
       </p>
     )}
-    <p class="mt-2 text-sm text-slate-400">URL: /e/{event.slug}</p>
+  </div>
+
+  {/* Customization Panel */}
+  <div class="mb-6">
+    <CustomizationPanel
+      client:load
+      eventId={event.id}
+      initialConfig={customConfig}
+    />
   </div>
 
   {/* Section Editor */}

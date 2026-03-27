@@ -16,15 +16,26 @@ import { eq, and, asc } from 'drizzle-orm';
 export const prerender = false;
 
 const { slug } = Astro.params;
+const isPreview = Astro.url.searchParams.get('preview') === 'true';
 
-// Fetch event by slug (only published events)
-const [event] = await db
-  .select()
-  .from(events)
-  .where(and(eq(events.slug, slug!), eq(events.status, 'published')));
+// Fetch event by slug — preview mode allows any status, public only published
+let eventQuery;
+if (isPreview) {
+  [eventQuery] = await db
+    .select()
+    .from(events)
+    .where(eq(events.slug, slug!));
+} else {
+  [eventQuery] = await db
+    .select()
+    .from(events)
+    .where(and(eq(events.slug, slug!), eq(events.status, 'published')));
+}
+
+const event = eventQuery;
 
 if (!event) {
-  return new Response('Invitacion no encontrada', { status: 404 });
+  return new Response(null, { status: 404, statusText: 'Invitacion no encontrada' });
 }
 
 // Fetch active sections ordered

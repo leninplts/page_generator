@@ -46,7 +46,7 @@ export const updateEventSchema = z.object({
     .nullable(),
   timezone: z.string().optional(),
   status: z.enum(["draft", "published", "archived"]).optional(),
-  customConfig: z.record(z.unknown()).optional(),
+  customConfig: z.any().optional(),
 });
 
 export type UpdateEventInput = z.infer<typeof updateEventSchema>;

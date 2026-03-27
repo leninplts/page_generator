@@ -179,8 +179,8 @@ export const sectionContentSchemas = {
 export const updateSectionSchema = z.object({
   isActive: z.boolean().optional(),
   order: z.number().int().min(0).optional(),
-  config: z.record(z.unknown()).optional(),
-  content: z.record(z.unknown()).optional(),
+  config: z.any().optional(),
+  content: z.any().optional(),
 });
 
 export type UpdateSectionInput = z.infer<typeof updateSectionSchema>;

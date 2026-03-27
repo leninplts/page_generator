@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import {
   DndContext,
   closestCenter,
@@ -17,6 +17,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { clsx } from "clsx";
+import { SectionForm } from "./forms";
 
 interface Section {
   id: string;
@@ -66,16 +67,8 @@ const SECTION_INFO: Record<
     icon: "👨‍👩‍👧‍👦",
     description: "Padrinos, padres y familia",
   },
-  gallery: {
-    label: "Galeria",
-    icon: "📸",
-    description: "Fotos del evento",
-  },
-  video: {
-    label: "Video",
-    icon: "🎬",
-    description: "Video especial",
-  },
+  gallery: { label: "Galeria", icon: "📸", description: "Fotos del evento" },
+  video: { label: "Video", icon: "🎬", description: "Video especial" },
   itinerary: {
     label: "Itinerario",
     icon: "📋",
@@ -116,9 +109,15 @@ const SECTION_INFO: Record<
 function SortableSection({
   section,
   onToggle,
+  isExpanded,
+  onToggleExpand,
+  onContentChange,
 }: {
   section: Section;
   onToggle: (id: string) => void;
+  isExpanded: boolean;
+  onToggleExpand: (id: string) => void;
+  onContentChange: (id: string, content: Record<string, any>) => void;
 }) {
   const info = SECTION_INFO[section.sectionType] || {
     label: section.sectionType,
@@ -144,62 +143,102 @@ function SortableSection({
       ref={setNodeRef}
       style={style}
       className={clsx(
-        "flex items-center gap-3 rounded-lg border p-3 transition-all",
-        isDragging && "z-50 shadow-lg scale-[1.02]",
-        section.isActive
-          ? "border-slate-200 bg-white"
-          : "border-slate-100 bg-slate-50 opacity-60",
+        "rounded-xl border transition-all",
+        isDragging && "z-50 shadow-lg scale-[1.01]",
+        isExpanded ? "border-orange-200 bg-white shadow-sm" : "",
+        !isExpanded && section.isActive ? "border-slate-200 bg-white" : "",
+        !isExpanded && !section.isActive
+          ? "border-slate-100 bg-slate-50 opacity-60"
+          : "",
       )}
     >
-      {/* Drag handle */}
-      <button
-        {...attributes}
-        {...listeners}
-        className="cursor-grab touch-none rounded p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600 active:cursor-grabbing"
-        aria-label="Arrastrar"
-      >
-        <svg
-          className="h-5 w-5"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth="1.5"
-          stroke="currentColor"
+      {/* Header row */}
+      <div className="flex items-center gap-3 p-3">
+        {/* Drag handle */}
+        <button
+          {...attributes}
+          {...listeners}
+          className="cursor-grab touch-none rounded p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600 active:cursor-grabbing"
+          aria-label="Arrastrar"
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-          />
-        </svg>
-      </button>
+          <svg
+            className="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="1.5"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+            />
+          </svg>
+        </button>
 
-      {/* Icon + Info */}
-      <span className="text-xl flex-shrink-0">{info.icon}</span>
-      <div className="min-w-0 flex-1">
-        <p className="text-sm font-medium text-slate-900">{info.label}</p>
-        <p className="truncate text-xs text-slate-400">{info.description}</p>
+        {/* Clickable area to expand */}
+        <button
+          type="button"
+          onClick={() => onToggleExpand(section.id)}
+          className="flex flex-1 items-center gap-3 min-w-0 text-left"
+        >
+          <span className="text-xl flex-shrink-0">{info.icon}</span>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-medium text-slate-900">{info.label}</p>
+            <p className="truncate text-xs text-slate-400">
+              {info.description}
+            </p>
+          </div>
+          {/* Expand chevron */}
+          <svg
+            className={clsx(
+              "h-4 w-4 text-slate-400 transition-transform",
+              isExpanded && "rotate-180",
+            )}
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="1.5"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+            />
+          </svg>
+        </button>
+
+        {/* Toggle */}
+        <button
+          type="button"
+          onClick={() => onToggle(section.id)}
+          className={clsx(
+            "relative inline-flex h-6 w-11 flex-shrink-0 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2",
+            section.isActive ? "bg-orange-500" : "bg-slate-200",
+          )}
+          role="switch"
+          aria-checked={section.isActive}
+        >
+          <span
+            className={clsx(
+              "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition-transform",
+              section.isActive ? "translate-x-5" : "translate-x-0.5",
+            )}
+            style={{ marginTop: "2px" }}
+          />
+        </button>
       </div>
 
-      {/* Toggle */}
-      <button
-        type="button"
-        onClick={() => onToggle(section.id)}
-        className={clsx(
-          "relative inline-flex h-6 w-11 flex-shrink-0 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2",
-          section.isActive ? "bg-indigo-600" : "bg-slate-200",
-        )}
-        role="switch"
-        aria-checked={section.isActive}
-        aria-label={`${section.isActive ? "Desactivar" : "Activar"} ${info.label}`}
-      >
-        <span
-          className={clsx(
-            "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition-transform",
-            section.isActive ? "translate-x-5" : "translate-x-0.5",
-          )}
-          style={{ marginTop: "2px" }}
-        />
-      </button>
+      {/* Expandable content form */}
+      {isExpanded && (
+        <div className="border-t border-slate-100 px-4 py-4">
+          <SectionForm
+            sectionType={section.sectionType}
+            content={section.content as Record<string, any>}
+            onChange={(newContent) => onContentChange(section.id, newContent)}
+          />
+        </div>
+      )}
     </div>
   );
 }
@@ -209,8 +248,10 @@ export function SectionEditor({
   initialSections,
 }: SectionEditorProps) {
   const [sections, setSections] = useState<Section[]>(initialSections);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<string | null>(null);
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -219,7 +260,17 @@ export function SectionEditor({
     }),
   );
 
-  const saveChanges = useCallback(
+  const markSaved = () => {
+    setLastSaved(
+      new Date().toLocaleTimeString("es-ES", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+    );
+  };
+
+  // Save order + active state (batch)
+  const saveOrderAndState = useCallback(
     async (updatedSections: Section[]) => {
       setSaving(true);
       try {
@@ -228,21 +279,34 @@ export function SectionEditor({
           order: index,
           isActive: s.isActive,
         }));
-
         await fetch(`/api/events/${eventId}/sections`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(updates),
         });
-
-        setLastSaved(
-          new Date().toLocaleTimeString("es-ES", {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-        );
+        markSaved();
       } catch (err) {
         console.error("Error saving sections:", err);
+      } finally {
+        setSaving(false);
+      }
+    },
+    [eventId],
+  );
+
+  // Save single section content (debounced)
+  const saveContent = useCallback(
+    async (sectionId: string, content: Record<string, any>) => {
+      setSaving(true);
+      try {
+        await fetch(`/api/events/${eventId}/sections`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify([{ id: sectionId, content }]),
+        });
+        markSaved();
+      } catch (err) {
+        console.error("Error saving content:", err);
       } finally {
         setSaving(false);
       }
@@ -253,13 +317,11 @@ export function SectionEditor({
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
-
     const oldIndex = sections.findIndex((s) => s.id === active.id);
     const newIndex = sections.findIndex((s) => s.id === over.id);
     const newSections = arrayMove(sections, oldIndex, newIndex);
-
     setSections(newSections);
-    saveChanges(newSections);
+    saveOrderAndState(newSections);
   };
 
   const handleToggle = (id: string) => {
@@ -267,22 +329,39 @@ export function SectionEditor({
       s.id === id ? { ...s, isActive: !s.isActive } : s,
     );
     setSections(newSections);
-    saveChanges(newSections);
+    saveOrderAndState(newSections);
+  };
+
+  const handleToggleExpand = (id: string) => {
+    setExpandedId(expandedId === id ? null : id);
+  };
+
+  const handleContentChange = (id: string, newContent: Record<string, any>) => {
+    // Update local state immediately
+    const newSections = sections.map((s) =>
+      s.id === id ? { ...s, content: newContent } : s,
+    );
+    setSections(newSections);
+
+    // Debounced save
+    if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+    saveTimerRef.current = setTimeout(() => {
+      saveContent(id, newContent);
+    }, 800);
   };
 
   const activeCount = sections.filter((s) => s.isActive).length;
 
   return (
     <div>
-      {/* Header */}
       <div className="mb-4 flex items-center justify-between">
         <div>
           <h3 className="text-lg font-semibold text-slate-900">
             Secciones de la invitacion
           </h3>
           <p className="text-sm text-slate-500">
-            Arrastra para reordenar. Activa o desactiva secciones.
-            <span className="ml-2 font-medium text-indigo-600">
+            Arrastra para reordenar. Haz clic para editar contenido.
+            <span className="ml-2 font-medium text-orange-600">
               {activeCount} activas
             </span>
           </p>
@@ -318,7 +397,6 @@ export function SectionEditor({
         </div>
       </div>
 
-      {/* Draggable list */}
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
@@ -334,6 +412,9 @@ export function SectionEditor({
                 key={section.id}
                 section={section}
                 onToggle={handleToggle}
+                isExpanded={expandedId === section.id}
+                onToggleExpand={handleToggleExpand}
+                onContentChange={handleContentChange}
               />
             ))}
           </div>

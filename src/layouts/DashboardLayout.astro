@@ -9,6 +9,10 @@ interface Props {
 const { title } = Astro.props;
 const user = Astro.locals.user;
 const currentPath = Astro.url.pathname;
+
+// Greeting based on time
+const hour = new Date().getHours();
+const greeting = hour < 12 ? 'Buenos dias' : hour < 18 ? 'Buenas tardes' : 'Buenas noches';
 ---
 
 <!doctype html>
@@ -17,9 +21,12 @@ const currentPath = Astro.url.pathname;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     <title>{title} | Page Generator</title>
   </head>
-  <body class="min-h-screen bg-slate-50">
+  <body class="min-h-screen bg-[#F5F5F0] font-['Inter',system-ui,sans-serif]">
     <div class="flex min-h-screen">
       <Sidebar
         client:load
@@ -28,10 +35,45 @@ const currentPath = Astro.url.pathname;
         currentPath={currentPath}
       />
       <main class="flex-1 min-w-0">
-        {/* Top header bar */}
-        <header class="sticky top-0 z-10 flex h-16 items-center border-b border-slate-200 bg-white/80 backdrop-blur-sm px-6 lg:px-8">
+        {/* Header */}
+        <header class="flex flex-col gap-4 px-6 pt-6 pb-2 lg:flex-row lg:items-center lg:justify-between lg:px-8 lg:pt-8">
           <div class="ml-12 lg:ml-0">
-            <h1 class="text-lg font-semibold text-slate-900">{title}</h1>
+            <h1 class="text-2xl font-bold text-slate-900 lg:text-3xl">
+              {greeting}, {user?.name?.split(' ')[0] || 'Usuario'}
+            </h1>
+            <p class="mt-0.5 text-sm text-slate-500">
+              Gestiona tus invitaciones y haz seguimiento de tus eventos.
+            </p>
+          </div>
+          <div class="flex items-center gap-3">
+            {/* Search */}
+            <div class="relative hidden sm:block">
+              <svg class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+              </svg>
+              <input
+                type="text"
+                placeholder="Buscar eventos..."
+                class="h-10 w-64 rounded-xl border border-slate-200 bg-white pl-10 pr-4 text-sm text-slate-700 placeholder:text-slate-400 focus:border-orange-300 focus:outline-none focus:ring-2 focus:ring-orange-500/20"
+              />
+            </div>
+            {/* Notifications */}
+            <button class="relative flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 hover:text-slate-700 transition-colors">
+              <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+              </svg>
+              <span class="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-orange-500 text-[10px] font-bold text-white">3</span>
+            </button>
+            {/* User avatar */}
+            <div class="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-3 py-1.5">
+              <div class="flex h-8 w-8 items-center justify-center rounded-full bg-orange-100 text-sm font-semibold text-orange-600">
+                {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+              </div>
+              <div class="hidden sm:block">
+                <p class="text-sm font-medium text-slate-900 leading-tight">{user?.name || 'Usuario'}</p>
+                <p class="text-xs text-slate-500 leading-tight">{user?.email || ''}</p>
+              </div>
+            </div>
           </div>
         </header>
         {/* Page content */}

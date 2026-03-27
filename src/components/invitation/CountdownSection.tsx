@@ -60,7 +60,7 @@ export function CountdownSection({
 
   return (
     <section
-      className="py-20 px-6 text-center"
+      className="py-12 px-6 text-center"
       style={{ backgroundColor: colors.secondary }}
     >
       <div className="max-w-md mx-auto">

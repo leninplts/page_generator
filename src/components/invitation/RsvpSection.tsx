@@ -92,7 +92,7 @@ export function RsvpSection({
   if (submitted) {
     return (
       <section
-        className="py-24 px-6 text-center"
+        className="py-14 px-6 text-center"
         style={{ backgroundColor: colors.secondary }}
       >
         <div className="max-w-sm mx-auto">
@@ -125,7 +125,7 @@ export function RsvpSection({
 
   return (
     <section
-      className="py-20 px-6 text-center"
+      className="py-12 px-6 text-center"
       style={{ backgroundColor: colors.secondary }}
     >
       <div className="max-w-sm mx-auto">

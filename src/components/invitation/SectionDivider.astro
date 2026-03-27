@@ -9,22 +9,28 @@ const { fromColor, toColor, variant = 'classic' } = Astro.props;
 ---
 
 {variant === 'classic' && (
-  <div class="relative h-8 -mt-1 -mb-1" style={`background-color: ${toColor}`}>
+  <div class="relative h-16 -mt-2 z-10" style={`background-color: ${toColor}`}>
+    {/* Main torn paper edge — wide organic rip like real paper */}
     <div
-      class="absolute top-0 left-0 right-0 h-full"
-      style={`background-color: ${fromColor}; clip-path: polygon(0 0, 100% 0, 100% 30%, 98% 55%, 95% 35%, 92% 50%, 88% 30%, 85% 45%, 80% 25%, 75% 45%, 70% 30%, 65% 50%, 60% 25%, 55% 40%, 50% 20%, 45% 45%, 40% 30%, 35% 50%, 30% 25%, 25% 40%, 20% 20%, 15% 45%, 10% 30%, 5% 50%, 2% 35%, 0 50%)`}
+      class="absolute top-0 left-[-2%] right-[-2%]"
+      style={`height: 100%; background-color: ${fromColor}; clip-path: polygon(0 0, 100% 0, 100% 15%, 98% 35%, 96% 20%, 94% 45%, 91% 25%, 89% 50%, 87% 30%, 84% 55%, 82% 35%, 79% 60%, 77% 40%, 75% 55%, 72% 30%, 70% 50%, 68% 25%, 65% 45%, 63% 20%, 60% 50%, 58% 30%, 55% 55%, 53% 35%, 50% 60%, 48% 40%, 45% 55%, 43% 30%, 40% 50%, 38% 25%, 35% 45%, 33% 20%, 30% 50%, 28% 30%, 25% 55%, 22% 35%, 20% 60%, 18% 40%, 15% 55%, 13% 30%, 10% 50%, 8% 25%, 5% 45%, 3% 20%, 1% 40%, 0 30%)`}
+    />
+    {/* Shadow for depth — offset slightly down */}
+    <div
+      class="absolute left-[-2%] right-[-2%]"
+      style={`top: 3px; height: 100%; opacity: 0.08; background-color: #000; clip-path: polygon(0 0, 100% 0, 100% 15%, 98% 35%, 96% 20%, 94% 45%, 91% 25%, 89% 50%, 87% 30%, 84% 55%, 82% 35%, 79% 60%, 77% 40%, 75% 55%, 72% 30%, 70% 50%, 68% 25%, 65% 45%, 63% 20%, 60% 50%, 58% 30%, 55% 55%, 53% 35%, 50% 60%, 48% 40%, 45% 55%, 43% 30%, 40% 50%, 38% 25%, 35% 45%, 33% 20%, 30% 50%, 28% 30%, 25% 55%, 22% 35%, 20% 60%, 18% 40%, 15% 55%, 13% 30%, 10% 50%, 8% 25%, 5% 45%, 3% 20%, 1% 40%, 0 30%); filter: blur(3px)`}
     />
   </div>
 )}
 
 {variant === 'modern' && (
-  <div class="flex justify-center py-6" style={`background-color: ${toColor}`}>
+  <div class="flex justify-center py-4" style={`background-color: ${toColor}`}>
     <div class="w-16 h-px" style={`background-color: ${fromColor}; opacity: 0.2`} />
   </div>
 )}
 
 {variant === 'elegant' && (
-  <div class="flex justify-center items-center py-4 gap-3" style={`background-color: ${toColor}`}>
+  <div class="flex justify-center items-center py-3 gap-3" style={`background-color: ${toColor}`}>
     <div class="w-12 h-px" style={`background-color: ${fromColor}; opacity: 0.15`} />
     <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
       <rect x="2" y="2" width="4" height="4" transform="rotate(45 4 4)" stroke={fromColor} stroke-width="0.5" opacity="0.2" />

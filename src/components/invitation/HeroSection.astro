@@ -12,7 +12,7 @@ interface Props {
 const { title, subtitle, date, imageUrl, colors, fonts, variant = 'classic' } = Astro.props;
 ---
 
-<section class="py-20 px-6 text-center" style={`background-color: ${colors.background}`}>
+<section class="py-12 px-6 text-center" style={`background-color: ${colors.background}`}>
   <div class="max-w-md mx-auto">
     {/* Classic: Floral wreath with names */}
     {variant === 'classic' && (

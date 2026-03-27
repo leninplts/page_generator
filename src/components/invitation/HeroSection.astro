@@ -1,0 +1,44 @@
+---
+interface Props {
+  title: string;
+  subtitle?: string;
+  date?: string;
+  imageUrl?: string;
+  colors: { primary: string; secondary: string; background: string; text: string };
+  fonts: { heading: string; body: string };
+}
+
+const { title, subtitle, date, imageUrl, colors, fonts } = Astro.props;
+---
+
+<section class="relative py-16 px-6 text-center" style={`background-color: ${colors.background}`}>
+  {/* Decorative circle */}
+  <div class="mx-auto w-64 h-64 rounded-full border-2 flex items-center justify-center mb-8" style={`border-color: ${colors.secondary}`}>
+    <div class="text-center">
+      <h1
+        class="text-4xl leading-tight"
+        style={`font-family: '${fonts.heading}', cursive; color: ${colors.primary}`}
+      >
+        {title}
+      </h1>
+    </div>
+  </div>
+
+  {subtitle && (
+    <p class="text-lg font-semibold tracking-widest uppercase mb-2" style={`color: ${colors.text}`}>
+      {subtitle}
+    </p>
+  )}
+
+  {date && (
+    <p class="text-sm tracking-[0.3em]" style={`color: ${colors.text}; opacity: 0.7`}>
+      &mdash; {date} &mdash;
+    </p>
+  )}
+
+  {imageUrl && (
+    <div class="mt-10 -mx-6 overflow-hidden">
+      <img src={imageUrl} alt={title} class="w-full h-80 object-cover" loading="eager" />
+    </div>
+  )}
+</section>

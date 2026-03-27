@@ -1,21 +1,246 @@
 ---
-import PublicLayout from '../../layouts/PublicLayout.astro';
+import HeroSection from '../../components/invitation/HeroSection.astro';
+import StorySection from '../../components/invitation/StorySection.astro';
+import LocationSection from '../../components/invitation/LocationSection.astro';
+import GodparentsSection from '../../components/invitation/GodparentsSection.astro';
+import MessageSection from '../../components/invitation/MessageSection.astro';
+import ItinerarySection from '../../components/invitation/ItinerarySection.astro';
+import DressCodeSection from '../../components/invitation/DressCodeSection.astro';
+import { CountdownSection } from '../../components/invitation/CountdownSection';
+import { SplashScreen } from '../../components/invitation/SplashScreen';
+import { MusicPlayer } from '../../components/invitation/MusicPlayer';
+import { db } from '../../lib/db';
+import { events, eventSections } from '../../lib/db/schema';
+import { eq, and, asc } from 'drizzle-orm';
 
 export const prerender = false;
 
 const { slug } = Astro.params;
 
-// TODO: Fetch event data from database by slug
-// For now, show a placeholder
+// Fetch event by slug (only published events)
+const [event] = await db
+  .select()
+  .from(events)
+  .where(and(eq(events.slug, slug!), eq(events.status, 'published')));
+
+if (!event) {
+  return new Response('Invitacion no encontrada', { status: 404 });
+}
+
+// Fetch active sections ordered
+const sections = await db
+  .select()
+  .from(eventSections)
+  .where(and(eq(eventSections.eventId, event.id), eq(eventSections.isActive, true)))
+  .orderBy(asc(eventSections.order));
+
+// Parse config
+const config = (event.customConfig || {}) as {
+  colors?: { primary: string; secondary: string; accent: string; background: string; text: string };
+  fonts?: { heading: string; body: string };
+};
+
+const colors = config.colors || {
+  primary: '#6366f1',
+  secondary: '#e0e7ff',
+  accent: '#818cf8',
+  background: '#ffffff',
+  text: '#1e293b',
+};
+
+const fonts = config.fonts || {
+  heading: 'Playfair Display',
+  body: 'Lato',
+};
+
+// Format date for display
+const formattedDate = event.eventDate
+  ? new Date(event.eventDate + 'T00:00:00').toLocaleDateString('es-ES', {
+      day: '2-digit', month: '2-digit', year: 'numeric',
+    }).replace(/\//g, ' · ')
+  : '';
+
+// Find music section for audio URL
+const musicSection = sections.find(s => s.sectionType === 'music');
+const audioUrl = (musicSection?.content as Record<string, unknown>)?.audioUrl as string || '';
+
+// Google Fonts URL
+const fontsUrl = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(fonts.heading)}:wght@400;700&family=${encodeURIComponent(fonts.body)}:wght@300;400;600&display=swap`;
+
+// Pre-process sections for template (avoid type casts in Astro template)
+interface SectionData {
+  type: string;
+  content: Record<string, any>;
+  altBg: boolean;
+}
+
+const processedSections: SectionData[] = [];
+let altBgState = false;
+for (const section of sections) {
+  altBgState = !altBgState;
+  processedSections.push({
+    type: section.sectionType,
+    content: section.content as Record<string, any> || {},
+    altBg: altBgState,
+  });
+}
 ---
 
-<PublicLayout
-  title="Invitacion"
-  description="Estas invitado a un evento especial"
->
-  <div class="flex flex-col items-center justify-center min-h-screen text-center p-6">
-    <h1 class="text-3xl font-bold text-slate-900 mb-4">Invitacion</h1>
-    <p class="text-slate-600">Evento: {slug}</p>
-    <p class="text-sm text-slate-400 mt-4">Proximamente...</p>
-  </div>
-</PublicLayout>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{event.title}</title>
+    <meta name="description" content={`Estas invitado a ${event.title}`} />
+
+    <!-- OG Tags for WhatsApp -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={event.title} />
+    <meta property="og:description" content={`Estas invitado a ${event.title}`} />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href={fontsUrl} rel="stylesheet" />
+
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+      body { line-height: 1.6; }
+      .invitation-container { max-width: 448px; margin: 0 auto; overflow-x: hidden; min-height: 100vh; position: relative; }
+      /* Section divider - torn paper effect */
+      .section-divider { height: 24px; position: relative; }
+      .section-divider::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -5%;
+        right: -5%;
+        height: 100%;
+        background: inherit;
+        clip-path: polygon(0% 60%, 2% 40%, 5% 55%, 8% 35%, 12% 50%, 15% 30%, 18% 55%, 22% 40%, 25% 60%, 28% 35%, 32% 50%, 35% 30%, 38% 55%, 42% 40%, 45% 60%, 48% 35%, 52% 55%, 55% 40%, 58% 55%, 62% 35%, 65% 50%, 68% 40%, 72% 60%, 75% 35%, 78% 50%, 82% 30%, 85% 55%, 88% 35%, 92% 50%, 95% 40%, 98% 55%, 100% 40%, 100% 100%, 0% 100%);
+      }
+    </style>
+  </head>
+  <body style={`font-family: '${fonts.body}', sans-serif; background-color: ${colors.background};`}>
+    <div class="invitation-container">
+      {/* Splash Screen */}
+      <SplashScreen
+        client:load
+        title={event.title}
+        subtitle={formattedDate}
+        colors={colors}
+        fonts={fonts}
+      />
+
+      {/* Sections */}
+      {processedSections.map((s) => {
+        if (s.type === 'hero') return (
+          <HeroSection
+            title={s.content.title || event.title}
+            subtitle={s.content.subtitle}
+            date={formattedDate}
+            imageUrl={s.content.imageUrl}
+            colors={colors}
+            fonts={fonts}
+          />
+        );
+        if (s.type === 'countdown' && event.eventDate) return (
+          <CountdownSection
+            client:load
+            eventDate={event.eventDate}
+            eventTime={event.eventTime || undefined}
+            endMessage={s.content.endMessage}
+            colors={colors}
+            fonts={fonts}
+          />
+        );
+        if (s.type === 'story') return (
+          <StorySection
+            title={s.content.title}
+            content={s.content.content}
+            imageUrl={s.content.imageUrl}
+            colors={colors}
+            fonts={fonts}
+            altBackground={s.altBg}
+          />
+        );
+        if (s.type === 'ceremony') return (
+          <LocationSection
+            title="Ceremonia"
+            placeName={s.content.placeName}
+            address={s.content.address}
+            time={s.content.time}
+            latitude={s.content.latitude}
+            longitude={s.content.longitude}
+            imageUrl={s.content.imageUrl}
+            colors={colors}
+            fonts={fonts}
+            altBackground={s.altBg}
+          />
+        );
+        if (s.type === 'reception') return (
+          <LocationSection
+            title="Recepcion"
+            placeName={s.content.placeName}
+            address={s.content.address}
+            time={s.content.time}
+            latitude={s.content.latitude}
+            longitude={s.content.longitude}
+            imageUrl={s.content.imageUrl}
+            colors={colors}
+            fonts={fonts}
+            altBackground={s.altBg}
+          />
+        );
+        if (s.type === 'godparents') return (
+          <GodparentsSection
+            people={s.content.people || []}
+            colors={colors}
+            fonts={fonts}
+            altBackground={s.altBg}
+          />
+        );
+        if (s.type === 'message') return (
+          <MessageSection
+            title={s.content.title}
+            content={s.content.content}
+            colors={colors}
+            fonts={fonts}
+            altBackground={s.altBg}
+          />
+        );
+        if (s.type === 'itinerary') return (
+          <ItinerarySection
+            items={s.content.items || []}
+            colors={colors}
+            fonts={fonts}
+            altBackground={s.altBg}
+          />
+        );
+        if (s.type === 'dresscode') return (
+          <DressCodeSection
+            description={s.content.description}
+            colors={colors}
+            fonts={fonts}
+            altBackground={s.altBg}
+          />
+        );
+        return null;
+      })}
+
+      {/* Footer */}
+      <section class="py-10 px-6 text-center" style={`background-color: ${colors.background}`}>
+        <p class="text-xs" style={`color: ${colors.text}; opacity: 0.4`}>
+          Hecho con amor
+        </p>
+      </section>
+    </div>
+
+    {/* Background Music */}
+    {audioUrl && <audio id="bg-music" src={audioUrl} loop preload="auto" />}
+
+    {/* Floating Music Player */}
+    <MusicPlayer client:load audioUrl={audioUrl} colors={colors} />
+  </body>
+</html>

@@ -1,0 +1,44 @@
+---
+interface Person {
+  name: string;
+  role: string;
+  photoUrl?: string;
+}
+
+interface Props {
+  people: Person[];
+  colors: { primary: string; secondary: string; background: string; text: string };
+  fonts: { heading: string; body: string };
+  altBackground?: boolean;
+}
+
+const { people = [], colors, fonts, altBackground = false } = Astro.props;
+const bgColor = altBackground ? colors.secondary : colors.background;
+---
+
+<section class="py-14 px-6 text-center" style={`background-color: ${bgColor}`}>
+  <h2
+    class="text-3xl mb-8"
+    style={`font-family: '${fonts.heading}', cursive; color: ${colors.primary}`}
+  >
+    Padrinos y Familia
+  </h2>
+
+  <div class="space-y-6 max-w-xs mx-auto">
+    {people.map((person) => (
+      <div class="flex items-center gap-4">
+        {person.photoUrl ? (
+          <img src={person.photoUrl} alt={person.name} class="w-14 h-14 rounded-full object-cover" loading="lazy" />
+        ) : (
+          <div class="w-14 h-14 rounded-full flex items-center justify-center text-lg font-semibold" style={`background-color: ${colors.secondary}; color: ${colors.primary}`}>
+            {person.name.charAt(0)}
+          </div>
+        )}
+        <div class="text-left">
+          <p class="font-semibold text-sm" style={`color: ${colors.text}`}>{person.name}</p>
+          <p class="text-xs" style={`color: ${colors.text}; opacity: 0.6`}>{person.role}</p>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>

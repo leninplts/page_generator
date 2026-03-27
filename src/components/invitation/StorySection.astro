@@ -1,0 +1,39 @@
+---
+interface Props {
+  title?: string;
+  content?: string;
+  imageUrl?: string;
+  colors: { primary: string; secondary: string; background: string; text: string };
+  fonts: { heading: string; body: string };
+  altBackground?: boolean;
+}
+
+const { title, content, imageUrl, colors, fonts, altBackground = false } = Astro.props;
+const bgColor = altBackground ? colors.secondary : colors.background;
+---
+
+<section class="py-14 px-6 text-center" style={`background-color: ${bgColor}`}>
+  {title && (
+    <h2
+      class="text-3xl mb-6"
+      style={`font-family: '${fonts.heading}', cursive; color: ${colors.primary}`}
+    >
+      {title}
+    </h2>
+  )}
+
+  {content && (
+    <p
+      class="text-base leading-relaxed max-w-sm mx-auto"
+      style={`font-family: '${fonts.body}', sans-serif; color: ${colors.text}; opacity: 0.8`}
+    >
+      {content}
+    </p>
+  )}
+
+  {imageUrl && (
+    <div class="mt-8 -mx-6 overflow-hidden">
+      <img src={imageUrl} alt={title || 'Historia'} class="w-full h-72 object-cover" loading="lazy" />
+    </div>
+  )}
+</section>

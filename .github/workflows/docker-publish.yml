@@ -39,5 +39,7 @@ jobs:
           context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
+          build-args: |
+            PUBLIC_BETTER_AUTH_URL=${{ secrets.PUBLIC_BETTER_AUTH_URL }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

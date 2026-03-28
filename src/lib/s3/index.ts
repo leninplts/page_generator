@@ -1,18 +1,23 @@
-import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+  DeleteObjectCommand,
+} from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 const s3Client = new S3Client({
-  region: import.meta.env.AWS_REGION || 'auto',
-  endpoint: import.meta.env.S3_ENDPOINT,
+  region: process.env.AWS_REGION || "auto",
+  endpoint: process.env.S3_ENDPOINT,
   credentials: {
-    accessKeyId: import.meta.env.AWS_ACCESS_KEY_ID || '',
-    secretAccessKey: import.meta.env.AWS_SECRET_ACCESS_KEY || '',
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID || "",
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "",
   },
   forcePathStyle: true, // Required for R2 compatibility
 });
 
-const BUCKET_NAME = import.meta.env.S3_BUCKET_NAME || '';
-const PUBLIC_URL = import.meta.env.S3_PUBLIC_URL || '';
+const BUCKET_NAME = process.env.S3_BUCKET_NAME || "";
+const PUBLIC_URL = process.env.S3_PUBLIC_URL || "";
 
 /**
  * Get the public URL for a file.
@@ -22,13 +27,17 @@ export function getPublicUrl(key: string): string {
   if (PUBLIC_URL) {
     return `${PUBLIC_URL}/${key}`;
   }
-  return `${import.meta.env.S3_ENDPOINT}/${BUCKET_NAME}/${key}`;
+  return `${process.env.S3_ENDPOINT}/${BUCKET_NAME}/${key}`;
 }
 
 /**
  * Upload a file directly to R2/S3.
  */
-export async function uploadFile(key: string, body: Buffer | Uint8Array, contentType: string) {
+export async function uploadFile(
+  key: string,
+  body: Buffer | Uint8Array,
+  contentType: string,
+) {
   const command = new PutObjectCommand({
     Bucket: BUCKET_NAME,
     Key: key,
@@ -44,7 +53,11 @@ export async function uploadFile(key: string, body: Buffer | Uint8Array, content
  * Get a presigned URL for client-side uploads.
  * The frontend uploads directly to R2 without going through our server.
  */
-export async function getSignedUploadUrl(key: string, contentType: string, expiresIn = 3600) {
+export async function getSignedUploadUrl(
+  key: string,
+  contentType: string,
+  expiresIn = 3600,
+) {
   const command = new PutObjectCommand({
     Bucket: BUCKET_NAME,
     Key: key,

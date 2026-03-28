@@ -9,6 +9,10 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 
+# PUBLIC_ env vars must exist at build time (Astro inlines them into client JS)
+ARG PUBLIC_BETTER_AUTH_URL=https://page-generator.libbagroup.com
+ENV PUBLIC_BETTER_AUTH_URL=$PUBLIC_BETTER_AUTH_URL
+
 # Copy source and build
 COPY . .
 RUN npm run build

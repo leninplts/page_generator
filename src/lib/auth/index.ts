@@ -25,7 +25,5 @@ export const auth = betterAuth({
       maxAge: 5 * 60, // 5 minutes
     },
   },
-  trustedOrigins: [
-    import.meta.env.BETTER_AUTH_URL || "http://localhost:4321",
-  ],
+  trustedOrigins: [process.env.BETTER_AUTH_URL || "http://localhost:4321"],
 });

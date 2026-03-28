@@ -4,102 +4,213 @@ interface Props {
   subtitle?: string;
   date?: string;
   imageUrl?: string;
-  colors: { primary: string; secondary: string; accent: string; background: string; text: string };
+  colors: {
+    primary: string;
+    secondary: string;
+    accent: string;
+    background: string;
+    text: string;
+  };
   fonts: { heading: string; body: string };
   variant?: string;
 }
 
-const { title, subtitle, date, imageUrl, colors, fonts, variant = 'classic' } = Astro.props;
+const {
+  title,
+  subtitle,
+  date,
+  imageUrl,
+  colors,
+  fonts,
+  variant = "classic",
+} = Astro.props;
 ---
 
-<section class="py-12 px-6 text-center" style={`background-color: ${colors.background}`}>
+<section
+  class="py-12 px-6 text-center"
+  style={`background-color: ${colors.background}`}
+>
   <div class="max-w-md mx-auto">
     {/* Classic: Floral wreath with names */}
-    {variant === 'classic' && (
-      <div class="relative mx-auto w-64 h-64 mb-10 flex items-center justify-center overflow-visible">
-        {/* Circle border */}
-        <div class="absolute inset-2 rounded-full" style={`border: 1px solid ${colors.accent}; opacity: 0.4`} />
-        {/* Top-left leaf cluster */}
-        <svg style={`position:absolute; top:-4px; left:-4px; width:72px; height:72px; opacity:0.3; color:${colors.accent}`} viewBox="0 0 80 80" fill="none">
-          <ellipse cx="25" cy="35" rx="8" ry="16" transform="rotate(-30 25 35)" fill="currentColor" />
-          <ellipse cx="18" cy="28" rx="6" ry="14" transform="rotate(-50 18 28)" fill="currentColor" />
-          <ellipse cx="35" cy="25" rx="7" ry="15" transform="rotate(-10 35 25)" fill="currentColor" />
-          <ellipse cx="15" cy="45" rx="5" ry="12" transform="rotate(-60 15 45)" fill="currentColor" />
-        </svg>
-        {/* Bottom-right leaf cluster */}
-        <svg style={`position:absolute; bottom:-4px; right:-4px; width:72px; height:72px; opacity:0.3; color:${colors.accent}; transform:rotate(180deg)`} viewBox="0 0 80 80" fill="none">
-          <ellipse cx="25" cy="35" rx="8" ry="16" transform="rotate(-30 25 35)" fill="currentColor" />
-          <ellipse cx="18" cy="28" rx="6" ry="14" transform="rotate(-50 18 28)" fill="currentColor" />
-          <ellipse cx="35" cy="25" rx="7" ry="15" transform="rotate(-10 35 25)" fill="currentColor" />
-          <ellipse cx="15" cy="45" rx="5" ry="12" transform="rotate(-60 15 45)" fill="currentColor" />
-        </svg>
-        {/* Names inside circle */}
-        <div class="relative z-10 text-center px-6">
+    {
+      variant === "classic" && (
+        <div class="relative mx-auto w-64 h-64 mb-10 flex items-center justify-center overflow-visible">
+          {/* Circle border */}
+          <div
+            class="absolute inset-2 rounded-full"
+            style={`border: 1px solid ${colors.accent}; opacity: 0.4`}
+          />
+          {/* Top-left leaf cluster */}
+          <svg
+            style={`position:absolute; top:-4px; left:-4px; width:72px; height:72px; opacity:0.3; color:${colors.accent}`}
+            viewBox="0 0 80 80"
+            fill="none"
+          >
+            <ellipse
+              cx="25"
+              cy="35"
+              rx="8"
+              ry="16"
+              transform="rotate(-30 25 35)"
+              fill="currentColor"
+            />
+            <ellipse
+              cx="18"
+              cy="28"
+              rx="6"
+              ry="14"
+              transform="rotate(-50 18 28)"
+              fill="currentColor"
+            />
+            <ellipse
+              cx="35"
+              cy="25"
+              rx="7"
+              ry="15"
+              transform="rotate(-10 35 25)"
+              fill="currentColor"
+            />
+            <ellipse
+              cx="15"
+              cy="45"
+              rx="5"
+              ry="12"
+              transform="rotate(-60 15 45)"
+              fill="currentColor"
+            />
+          </svg>
+          {/* Bottom-right leaf cluster */}
+          <svg
+            style={`position:absolute; bottom:-4px; right:-4px; width:72px; height:72px; opacity:0.3; color:${colors.accent}; transform:rotate(180deg)`}
+            viewBox="0 0 80 80"
+            fill="none"
+          >
+            <ellipse
+              cx="25"
+              cy="35"
+              rx="8"
+              ry="16"
+              transform="rotate(-30 25 35)"
+              fill="currentColor"
+            />
+            <ellipse
+              cx="18"
+              cy="28"
+              rx="6"
+              ry="14"
+              transform="rotate(-50 18 28)"
+              fill="currentColor"
+            />
+            <ellipse
+              cx="35"
+              cy="25"
+              rx="7"
+              ry="15"
+              transform="rotate(-10 35 25)"
+              fill="currentColor"
+            />
+            <ellipse
+              cx="15"
+              cy="45"
+              rx="5"
+              ry="12"
+              transform="rotate(-60 15 45)"
+              fill="currentColor"
+            />
+          </svg>
+          {/* Names inside circle */}
+          <div class="relative z-10 text-center px-6">
+            <h1
+              class="text-4xl leading-snug"
+              style={`font-family: '${fonts.heading}', cursive; color: ${colors.primary}`}
+            >
+              {title}
+            </h1>
+          </div>
+        </div>
+      )
+    }
+
+    {/* Modern: Bold clean text */}
+    {
+      variant === "modern" && (
+        <div class="mb-10">
           <h1
-            class="text-4xl leading-snug"
-            style={`font-family: '${fonts.heading}', cursive; color: ${colors.primary}`}
+            class="text-6xl font-bold uppercase tracking-tight leading-none"
+            style={`font-family: '${fonts.heading}', sans-serif; color: ${colors.primary}`}
           >
             {title}
           </h1>
+          <div
+            class="mt-4 mx-auto w-16 h-0.5"
+            style={`background-color: ${colors.accent}`}
+          />
         </div>
-      </div>
-    )}
-
-    {/* Modern: Bold clean text */}
-    {variant === 'modern' && (
-      <div class="mb-10">
-        <h1
-          class="text-6xl font-bold uppercase tracking-tight leading-none"
-          style={`font-family: '${fonts.heading}', sans-serif; color: ${colors.primary}`}
-        >
-          {title}
-        </h1>
-        <div class="mt-4 mx-auto w-16 h-0.5" style={`background-color: ${colors.accent}`} />
-      </div>
-    )}
+      )
+    }
 
     {/* Elegant: Ornamental borders */}
-    {variant === 'elegant' && (
-      <div class="mb-10">
-        <div class="mx-auto w-24 h-px mb-6" style={`background-color: ${colors.accent}; opacity: 0.4`} />
-        <h1
-          class="text-5xl leading-tight"
-          style={`font-family: '${fonts.heading}', serif; color: ${colors.primary}`}
+    {
+      variant === "elegant" && (
+        <div class="mb-10">
+          <div
+            class="mx-auto w-24 h-px mb-6"
+            style={`background-color: ${colors.accent}; opacity: 0.4`}
+          />
+          <h1
+            class="text-5xl leading-tight"
+            style={`font-family: '${fonts.heading}', serif; color: ${colors.primary}`}
+          >
+            {title}
+          </h1>
+          <div
+            class="mx-auto w-24 h-px mt-6"
+            style={`background-color: ${colors.accent}; opacity: 0.4`}
+          />
+        </div>
+      )
+    }
+
+    {
+      subtitle && (
+        <p
+          class="text-sm font-semibold tracking-[0.3em] uppercase mb-3"
+          style={`color: ${colors.text}; opacity: 0.7; font-family: '${fonts.body}', sans-serif`}
         >
-          {title}
-        </h1>
-        <div class="mx-auto w-24 h-px mt-6" style={`background-color: ${colors.accent}; opacity: 0.4`} />
-      </div>
-    )}
+          {subtitle}
+        </p>
+      )
+    }
 
-    {subtitle && (
-      <p
-        class="text-sm font-semibold tracking-[0.3em] uppercase mb-3"
-        style={`color: ${colors.text}; opacity: 0.7; font-family: '${fonts.body}', sans-serif`}
-      >
-        {subtitle}
-      </p>
-    )}
-
-    {date && (
-      <p
-        class="text-sm tracking-[0.25em]"
-        style={`color: ${colors.text}; opacity: 0.5; font-family: '${fonts.body}', sans-serif`}
-      >
-        — {date} —
-      </p>
-    )}
+    {
+      date && (
+        <p
+          class="tracking-[0.25em]"
+          style={`color: ${colors.text}; opacity: 0.5; font-family: '${fonts.body}', sans-serif`}
+        >
+          — {date} —
+        </p>
+      )
+    }
   </div>
 
   {/* Full-bleed photo with torn paper effect (classic) */}
-  {imageUrl && (
-    <div class="mt-16 -mx-6 relative overflow-hidden">
-      {variant === 'classic' && (
-        <div class="absolute top-0 left-0 right-0 h-8 z-10"
-          style={`background: ${colors.background}; clip-path: polygon(0 0, 100% 0, 100% 40%, 98% 65%, 95% 45%, 92% 60%, 88% 40%, 85% 55%, 80% 35%, 75% 55%, 70% 40%, 65% 60%, 60% 35%, 55% 50%, 50% 30%, 45% 55%, 40% 40%, 35% 60%, 30% 35%, 25% 50%, 20% 30%, 15% 55%, 10% 40%, 5% 60%, 2% 45%, 0 65%)`}
+  {
+    imageUrl && (
+      <div class="mt-16 -mx-6 relative overflow-hidden">
+        {variant === "classic" && (
+          <div
+            class="absolute top-0 left-0 right-0 h-8 z-10"
+            style={`background: ${colors.background}; clip-path: polygon(0 0, 100% 0, 100% 40%, 98% 65%, 95% 45%, 92% 60%, 88% 40%, 85% 55%, 80% 35%, 75% 55%, 70% 40%, 65% 60%, 60% 35%, 55% 50%, 50% 30%, 45% 55%, 40% 40%, 35% 60%, 30% 35%, 25% 50%, 20% 30%, 15% 55%, 10% 40%, 5% 60%, 2% 45%, 0 65%)`}
+          />
+        )}
+        <img
+          src={imageUrl}
+          alt={title}
+          class="w-full h-80 object-cover"
+          loading="eager"
         />
-      )}
-      <img src={imageUrl} alt={title} class="w-full h-80 object-cover" loading="eager" />
-    </div>
-  )}
+      </div>
+    )
+  }
 </section>

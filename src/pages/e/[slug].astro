@@ -332,14 +332,8 @@ for (const section of sections) {
 
         return (
           <>
-            {skipAnim ? (
-              section
-            ) : (
-              <div class="animate-section">
-                {showDividerBefore && <SectionDivider fromColor={prevBg} toColor={currentBg} variant={variant} />}
-                {section}
-              </div>
-            )}
+            {showDividerBefore && <SectionDivider fromColor={prevBg} toColor={currentBg} variant={variant} />}
+            {skipAnim ? section : <div class="animate-section">{section}</div>}
           </>
         );
       })}

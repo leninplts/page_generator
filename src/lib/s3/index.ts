@@ -6,18 +6,22 @@ import {
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
+// import.meta.env for Vite dev, process.env for Docker runtime
+const env = (key: string) =>
+  (import.meta.env[key] as string) || process.env[key] || "";
+
 const s3Client = new S3Client({
-  region: process.env.AWS_REGION || "auto",
-  endpoint: process.env.S3_ENDPOINT,
+  region: env("AWS_REGION") || "auto",
+  endpoint: env("S3_ENDPOINT"),
   credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID || "",
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "",
+    accessKeyId: env("AWS_ACCESS_KEY_ID"),
+    secretAccessKey: env("AWS_SECRET_ACCESS_KEY"),
   },
   forcePathStyle: true, // Required for R2 compatibility
 });
 
-const BUCKET_NAME = process.env.S3_BUCKET_NAME || "";
-const PUBLIC_URL = process.env.S3_PUBLIC_URL || "";
+const BUCKET_NAME = env("S3_BUCKET_NAME");
+const PUBLIC_URL = env("S3_PUBLIC_URL");
 
 /**
  * Get the public URL for a file.
@@ -27,7 +31,7 @@ export function getPublicUrl(key: string): string {
   if (PUBLIC_URL) {
     return `${PUBLIC_URL}/${key}`;
   }
-  return `${process.env.S3_ENDPOINT}/${BUCKET_NAME}/${key}`;
+  return `${env("S3_ENDPOINT")}/${BUCKET_NAME}/${key}`;
 }
 
 /**

@@ -258,15 +258,17 @@ for (const section of sections) {
               ? colors.secondary
               : colors.background
             : null;
-          const showDividerBefore = prevBg !== null && prevBg !== currentBg;
+          const skipAnim = s.type === "hero" || s.type === "countdown";
+          const prevSkipAnim = prevS ? (prevS.type === "hero" || prevS.type === "countdown") : false;
+          // Only show divider before if prev section didn't already render its divider after
+          const showDividerBefore = !skipAnim && !prevSkipAnim && prevBg !== null && prevBg !== currentBg;
           const nextS = processedSections[idx + 1];
           const nextBg = nextS
             ? nextS.altBg
               ? colors.secondary
               : colors.background
             : null;
-          const showDividerAfter = nextBg !== null && nextBg !== currentBg;
-          const skipAnim = s.type === "hero" || s.type === "countdown";
+          const showDividerAfter = skipAnim && nextBg !== null && nextBg !== currentBg;
 
           let section = null;
 

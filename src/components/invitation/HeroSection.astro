@@ -100,11 +100,6 @@ const { title, subtitle, date, imageUrl, colors, fonts, variant = 'classic' } = 
         />
       )}
       <img src={imageUrl} alt={title} class="w-full h-80 object-cover" loading="eager" />
-      {variant === 'classic' && (
-        <div class="absolute bottom-0 left-0 right-0 h-8 z-10 rotate-180"
-          style={`background: ${colors.background}; clip-path: polygon(0 0, 100% 0, 100% 40%, 98% 65%, 95% 45%, 92% 60%, 88% 40%, 85% 55%, 80% 35%, 75% 55%, 70% 40%, 65% 60%, 60% 35%, 55% 50%, 50% 30%, 45% 55%, 40% 40%, 35% 60%, 30% 35%, 25% 50%, 20% 30%, 15% 55%, 10% 40%, 5% 60%, 2% 45%, 0 65%)`}
-        />
-      )}
     </div>
   )}
 </section>

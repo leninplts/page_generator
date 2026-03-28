@@ -214,9 +214,19 @@ for (const section of sections) {
       .animate-section {
         opacity: 0;
         transform: translateY(30px);
-        transition:
-          opacity 0.8s ease,
-          transform 0.8s ease;
+        transition: opacity 0.8s ease, transform 0.8s ease;
+      }
+      .animate-section.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      /* Dividers animate earlier (more visible threshold) */
+      .animate-divider {
+        opacity: 0;
+        transition: opacity 0.6s ease;
+      }
+      .animate-divider.visible {
+        opacity: 1;
       }
       .animate-section.visible {
         opacity: 1;
@@ -430,22 +440,31 @@ for (const section of sections) {
 
           if (!section) return null;
 
+          const hasTornPaper = showDividerBefore || showDividerAfter;
+
+          if (skipAnim) {
+            return (
+              <>
+                {section}
+                {showDividerAfter && (
+                  <div class="animate-divider">
+                    <SectionDivider fromColor={currentBg} toColor={nextBg} variant={variant} />
+                  </div>
+                )}
+              </>
+            );
+          }
+
           return (
             <>
-              {skipAnim ? (
-                section
-              ) : (
-                <div class="animate-section">
-                  {section}
+              {showDividerBefore && (
+                <div class="animate-divider">
+                  <SectionDivider fromColor={prevBg} toColor={currentBg} variant={variant} />
                 </div>
               )}
-              {showDividerAfter && (
-                <SectionDivider
-                  fromColor={currentBg}
-                  toColor={nextBg}
-                  variant={variant}
-                />
-              )}
+              <div class="animate-section">
+                {section}
+              </div>
             </>
           );
         })
@@ -469,21 +488,28 @@ for (const section of sections) {
     {audioUrl && <audio id="bg-music" src={audioUrl} loop preload="auto" />}
 
     <script>
-      // IntersectionObserver for scroll animations
       document.addEventListener("DOMContentLoaded", () => {
-        const observer = new IntersectionObserver(
+        // Sections: fade in when scrolling into view
+        const sectionObserver = new IntersectionObserver(
           (entries) => {
             entries.forEach((entry) => {
-              if (entry.isIntersecting) {
-                entry.target.classList.add("visible");
-              }
+              if (entry.isIntersecting) entry.target.classList.add("visible");
             });
           },
           { threshold: 0.1, rootMargin: "0px 0px -50px 0px" },
         );
-        document
-          .querySelectorAll(".animate-section")
-          .forEach((el) => observer.observe(el));
+        document.querySelectorAll(".animate-section").forEach((el) => sectionObserver.observe(el));
+
+        // Dividers: appear earlier (bigger rootMargin = trigger sooner)
+        const dividerObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) entry.target.classList.add("visible");
+            });
+          },
+          { threshold: 0.01, rootMargin: "0px 0px 100px 0px" },
+        );
+        document.querySelectorAll(".animate-divider").forEach((el) => dividerObserver.observe(el));
       });
     </script>
   </body>

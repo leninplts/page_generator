@@ -167,9 +167,9 @@ for (const section of sections) {
       {/* Sections */}
       {processedSections.map((s, idx) => {
         const currentBg = s.altBg ? colors.secondary : colors.background;
-        const nextS = processedSections[idx + 1];
-        const nextBg = nextS ? (nextS.altBg ? colors.secondary : colors.background) : null;
-        const showDivider = nextBg !== null && nextBg !== currentBg;
+        const prevS = processedSections[idx - 1];
+        const prevBg = prevS ? (prevS.altBg ? colors.secondary : colors.background) : null;
+        const showDividerBefore = prevBg !== null && prevBg !== currentBg;
         const skipAnim = s.type === 'hero' || s.type === 'countdown';
 
         let section = null;
@@ -332,8 +332,14 @@ for (const section of sections) {
 
         return (
           <>
-            {skipAnim ? section : <div class="animate-section">{section}</div>}
-            {showDivider && <SectionDivider fromColor={currentBg} toColor={nextBg} variant={variant} />}
+            {skipAnim ? (
+              section
+            ) : (
+              <div class="animate-section">
+                {showDividerBefore && <SectionDivider fromColor={prevBg} toColor={currentBg} variant={variant} />}
+                {section}
+              </div>
+            )}
           </>
         );
       })}
@@ -344,13 +350,13 @@ for (const section of sections) {
           Hecho con amor
         </p>
       </section>
+
+      {/* Music Player — inside container so it stays within max-width */}
+      <MusicPlayer client:load audioUrl={audioUrl} colors={colors} />
     </div>
 
     {/* Background Music */}
     {audioUrl && <audio id="bg-music" src={audioUrl} loop preload="auto" />}
-
-    {/* Floating Music Player */}
-    <MusicPlayer client:load audioUrl={audioUrl} colors={colors} />
 
     <script>
       // IntersectionObserver for scroll animations

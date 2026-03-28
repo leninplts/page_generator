@@ -7,45 +7,49 @@ interface Props {
 
 const { fromColor, toColor, variant = 'classic' } = Astro.props;
 
-// SVG paths: drawn from BOTTOM up, with ragged edge pointing UP
-// This creates the effect of the bottom section's paper tearing upward
-// fromColor = background (section ending above)
-// toColor = SVG fill (section starting below, tears upward)
-const tornPath1 = "M0,55 L1200,55 L1200,20 C1180,28 1160,14 1140,24 C1120,34 1105,18 1085,26 C1065,14 1045,30 1030,20 C1010,10 995,28 975,18 C960,8 940,26 920,16 C905,6 885,24 865,14 C845,20 830,8 810,18 C790,28 775,10 755,20 C735,8 720,26 700,14 C685,4 665,22 645,12 C625,18 610,6 590,16 C570,26 555,8 535,18 C515,28 500,10 480,20 C460,8 445,26 425,14 C405,4 390,22 370,12 C350,18 335,6 315,16 C295,26 280,8 260,18 C240,8 225,24 205,14 C185,4 170,22 150,12 C130,18 115,6 95,16 C75,26 60,8 40,18 C20,8 10,22 0,14 Z";
+// Torn paper effect: fromColor (section above) tears apart revealing toColor (section below)
+// The SVGs draw fromColor from top down with ragged bottom edge
+// Background of container = toColor (revealed below the tear)
+// Ragged edge points DOWNWARD = paper torn from above hangs down
 
-const tornPath2 = "M0,55 L1200,55 L1200,22 C1175,30 1155,16 1135,26 C1115,12 1095,30 1080,20 C1060,10 1040,28 1025,18 C1005,8 985,26 970,16 C950,6 935,24 915,14 C895,20 880,8 860,18 C840,28 825,12 805,20 C785,10 770,26 750,16 C730,6 715,22 695,12 C675,18 660,6 640,16 C620,26 605,10 585,18 C565,8 550,24 530,14 C510,20 495,8 475,16 C455,26 440,10 420,18 C400,8 385,24 365,14 C345,20 330,8 310,16 C290,26 275,10 255,18 C235,8 220,24 200,14 C180,20 165,8 145,16 C125,26 110,10 90,18 C70,8 55,24 35,14 C15,20 5,12 0,16 Z";
+// Layer 1 — shadow (slightly offset down for depth)
+const tp1 = "M0,0 L1200,0 L1200,32 C1185,38 1165,28 1145,36 C1125,44 1108,30 1088,38 C1068,46 1050,32 1032,40 C1012,48 998,34 978,42 C958,50 942,36 922,44 C902,38 888,48 868,40 C848,32 832,44 812,36 C792,46 778,32 758,40 C738,48 722,34 702,42 C682,50 668,36 648,44 C628,38 612,48 592,40 C572,32 558,44 538,36 C518,46 502,32 482,40 C462,48 448,34 428,42 C408,50 392,36 372,44 C352,38 338,48 318,40 C298,32 282,44 262,36 C242,46 228,32 208,40 C188,48 172,34 152,42 C132,50 118,36 98,44 C78,38 62,48 42,40 C22,32 8,42 0,38 Z";
 
-const tornPath3 = "M0,55 L1200,55 L1200,24 C1178,32 1158,18 1138,28 C1118,16 1098,32 1078,22 C1058,12 1038,28 1018,18 C998,8 978,26 963,16 C943,6 928,24 908,14 C888,20 873,8 853,18 C833,28 818,12 798,20 C778,10 763,26 743,16 C723,6 708,22 688,12 C668,18 653,6 633,16 C613,26 598,10 578,18 C558,8 543,24 523,14 C503,20 488,8 468,16 C448,26 433,10 413,18 C393,8 378,24 358,14 C338,20 323,8 303,16 C283,26 268,10 248,18 C228,8 213,24 193,14 C173,20 158,8 138,16 C118,26 103,10 83,18 C63,8 48,24 28,14 C8,20 3,12 0,16 Z";
+// Layer 2 — fiber edge (semi-transparent)
+const tp2 = "M0,0 L1200,0 L1200,28 C1182,36 1162,24 1142,32 C1122,40 1102,28 1085,36 C1065,44 1048,30 1028,38 C1008,46 992,32 972,40 C952,48 938,34 918,42 C898,36 882,46 862,38 C842,28 828,42 808,34 C788,44 772,30 752,38 C732,46 718,32 698,40 C678,48 662,34 642,42 C622,36 608,46 588,38 C568,28 552,42 532,34 C512,44 498,30 478,38 C458,46 442,32 422,40 C402,48 388,34 368,42 C348,36 332,46 312,38 C292,28 278,42 258,34 C238,44 222,30 202,38 C182,46 168,32 148,40 C128,48 112,34 92,42 C72,36 58,46 38,38 C18,28 6,40 0,34 Z";
+
+// Layer 3 — solid paper edge (front)
+const tp3 = "M0,0 L1200,0 L1200,25 C1180,33 1160,22 1140,30 C1120,38 1100,26 1082,34 C1062,42 1045,28 1025,36 C1005,44 990,30 970,38 C950,46 935,32 915,40 C895,34 880,44 860,36 C840,26 825,40 805,32 C785,42 770,28 750,36 C730,44 715,30 695,38 C675,46 660,32 640,40 C620,34 605,44 585,36 C565,26 550,40 530,32 C510,42 495,28 475,36 C455,44 440,30 420,38 C400,46 385,32 365,40 C345,34 330,44 310,36 C290,26 275,40 255,32 C235,42 220,28 200,36 C180,44 165,30 145,38 C125,46 110,32 90,40 C70,34 55,44 35,36 C15,26 5,38 0,32 Z";
 ---
 
 {variant === 'classic' && (
-  <div class="relative -mt-1 overflow-hidden" style={`height: 50px; background-color: ${fromColor}`}>
-    {/* Layer 1: Shadow (deepest, slightly offset up) */}
+  <div class="relative -mt-1 overflow-hidden" style={`height: 50px; background-color: ${toColor}`}>
+    {/* Layer 1: Shadow */}
     <svg
-      class="absolute left-0 w-full"
+      class="absolute top-[4px] left-0 w-full"
       viewBox="0 0 1200 55"
       preserveAspectRatio="none"
-      style={`bottom: 3px; height: 50px; opacity: 0.06`}
+      style="height: 50px; opacity: 0.07"
     >
-      <path d={tornPath1} fill="#000" />
+      <path d={tp1} fill="#000" />
     </svg>
-    {/* Layer 2: Mid-tone (semi-transparent = paper fiber effect) */}
+    {/* Layer 2: Semi-transparent fiber edge */}
     <svg
-      class="absolute left-0 w-full"
+      class="absolute top-[2px] left-0 w-full"
       viewBox="0 0 1200 55"
       preserveAspectRatio="none"
-      style={`bottom: 1px; height: 50px; opacity: 0.3`}
+      style="height: 50px; opacity: 0.3"
     >
-      <path d={tornPath2} fill={toColor} />
+      <path d={tp2} fill={fromColor} />
     </svg>
-    {/* Layer 3: Front — solid paper edge of incoming section */}
+    {/* Layer 3: Solid paper edge */}
     <svg
-      class="absolute bottom-0 left-0 w-full"
+      class="absolute top-0 left-0 w-full"
       viewBox="0 0 1200 55"
       preserveAspectRatio="none"
       style="height: 50px"
     >
-      <path d={tornPath3} fill={toColor} />
+      <path d={tp3} fill={fromColor} />
     </svg>
   </div>
 )}

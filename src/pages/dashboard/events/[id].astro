@@ -3,6 +3,7 @@ import DashboardLayout from '../../../layouts/DashboardLayout.astro';
 import { SectionEditor } from '../../../components/editor/SectionEditor';
 import { CustomizationPanel } from '../../../components/editor/CustomizationPanel';
 import { SharePanel } from '../../../components/editor/SharePanel';
+import { RsvpPanel } from '../../../components/editor/RsvpPanel';
 import { db } from '../../../lib/db';
 import { events, eventSections } from '../../../lib/db/schema';
 import { eq, and, asc } from 'drizzle-orm';
@@ -108,6 +109,14 @@ const customConfig = {
       slug={event.slug}
       status={event.status as "draft" | "published" | "archived"}
       title={event.title}
+    />
+  </div>
+
+  {/* RSVP Panel */}
+  <div class="mb-6">
+    <RsvpPanel
+      client:load
+      eventId={event.id}
     />
   </div>
 

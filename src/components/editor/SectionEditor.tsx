@@ -240,6 +240,40 @@ function SortableSection({
             onChange={(newContent) => onContentChange(section.id, newContent)}
             eventId={eventId}
           />
+          {/* Divider config */}
+          <div className="mt-4 pt-4 border-t border-slate-100">
+            <p className="text-xs font-medium text-slate-500 mb-2">
+              Separadores de seccion
+            </p>
+            <div className="flex gap-6">
+              <label className="flex items-center gap-2 text-xs text-slate-600 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={(section.config as any)?.dividerTop || false}
+                  onChange={(e) =>
+                    onContentChange(section.id, {
+                      __configUpdate: { dividerTop: e.target.checked },
+                    } as any)
+                  }
+                  className="h-3.5 w-3.5 rounded border-slate-300 text-orange-500 focus:ring-orange-500"
+                />
+                Divisor arriba
+              </label>
+              <label className="flex items-center gap-2 text-xs text-slate-600 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={(section.config as any)?.dividerBottom || false}
+                  onChange={(e) =>
+                    onContentChange(section.id, {
+                      __configUpdate: { dividerBottom: e.target.checked },
+                    } as any)
+                  }
+                  className="h-3.5 w-3.5 rounded border-slate-300 text-orange-500 focus:ring-orange-500"
+                />
+                Divisor abajo
+              </label>
+            </div>
+          </div>
         </div>
       )}
     </div>
@@ -340,7 +374,35 @@ export function SectionEditor({
   };
 
   const handleContentChange = (id: string, newContent: Record<string, any>) => {
-    // Update local state immediately
+    // Check if this is a config update (dividers) or content update
+    if (newContent.__configUpdate) {
+      const configUpdate = newContent.__configUpdate;
+      const newSections = sections.map((s) =>
+        s.id === id
+          ? { ...s, config: { ...(s.config as any), ...configUpdate } }
+          : s,
+      );
+      setSections(newSections);
+
+      // Save config immediately
+      if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+      saveTimerRef.current = setTimeout(() => {
+        const section = newSections.find((s) => s.id === id);
+        if (section) {
+          setSaving(true);
+          fetch(`/api/events/${eventId}/sections`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify([{ id, config: section.config }]),
+          })
+            .then(() => markSaved())
+            .finally(() => setSaving(false));
+        }
+      }, 300);
+      return;
+    }
+
+    // Normal content update
     const newSections = sections.map((s) =>
       s.id === id ? { ...s, content: newContent } : s,
     );

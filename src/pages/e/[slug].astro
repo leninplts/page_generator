@@ -105,17 +105,24 @@ const fontsUrl = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(
 interface SectionData {
   type: string;
   content: Record<string, any>;
+  config: Record<string, any>;
   altBg: boolean;
+  dividerTop: boolean;
+  dividerBottom: boolean;
 }
 
 const processedSections: SectionData[] = [];
 let altBgState = false;
 for (const section of sections) {
   altBgState = !altBgState;
+  const sConfig = (section.config as Record<string, any>) || {};
   processedSections.push({
     type: section.sectionType,
     content: (section.content as Record<string, any>) || {},
+    config: sConfig,
     altBg: altBgState,
+    dividerTop: sConfig.dividerTop === true,
+    dividerBottom: sConfig.dividerBottom === true,
   });
 }
 ---
@@ -253,22 +260,10 @@ for (const section of sections) {
         processedSections.map((s, idx) => {
           const currentBg = s.altBg ? colors.secondary : colors.background;
           const prevS = processedSections[idx - 1];
-          const prevBg = prevS
-            ? prevS.altBg
-              ? colors.secondary
-              : colors.background
-            : null;
-          const skipAnim = s.type === "hero" || s.type === "countdown";
-          const prevSkipAnim = prevS ? (prevS.type === "hero" || prevS.type === "countdown") : false;
-          // Only show divider before if prev section didn't already render its divider after
-          const showDividerBefore = !skipAnim && !prevSkipAnim && prevBg !== null && prevBg !== currentBg;
+          const prevBg = prevS ? (prevS.altBg ? colors.secondary : colors.background) : colors.background;
           const nextS = processedSections[idx + 1];
-          const nextBg = nextS
-            ? nextS.altBg
-              ? colors.secondary
-              : colors.background
-            : null;
-          const showDividerAfter = skipAnim && nextBg !== null && nextBg !== currentBg;
+          const nextBg = nextS ? (nextS.altBg ? colors.secondary : colors.background) : colors.background;
+          const skipAnim = s.type === "hero" || s.type === "countdown";
 
           let section = null;
 
@@ -442,16 +437,12 @@ for (const section of sections) {
 
           if (!section) return null;
 
-          const hasTornPaper = showDividerBefore || showDividerAfter;
-
           if (skipAnim) {
             return (
               <>
                 {section}
-                {showDividerAfter && (
-                  <div class="animate-divider">
-                    <SectionDivider fromColor={currentBg} toColor={nextBg} variant={variant} />
-                  </div>
+                {s.dividerBottom && (
+                  <SectionDivider fromColor={currentBg} toColor={nextBg} variant={variant} />
                 )}
               </>
             );
@@ -459,7 +450,7 @@ for (const section of sections) {
 
           return (
             <>
-              {showDividerBefore && (
+              {s.dividerTop && (
                 <div class="animate-divider">
                   <SectionDivider fromColor={prevBg} toColor={currentBg} variant={variant} />
                 </div>
@@ -467,6 +458,9 @@ for (const section of sections) {
               <div class="animate-section">
                 {section}
               </div>
+              {s.dividerBottom && (
+                <SectionDivider fromColor={currentBg} toColor={nextBg} variant={variant} />
+              )}
             </>
           );
         })

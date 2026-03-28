@@ -1,88 +1,102 @@
 ---
-import '../../styles/global.css';
-import HeroSection from '../../components/invitation/HeroSection.astro';
-import StorySection from '../../components/invitation/StorySection.astro';
-import LocationSection from '../../components/invitation/LocationSection.astro';
-import GodparentsSection from '../../components/invitation/GodparentsSection.astro';
-import MessageSection from '../../components/invitation/MessageSection.astro';
-import ItinerarySection from '../../components/invitation/ItinerarySection.astro';
-import DressCodeSection from '../../components/invitation/DressCodeSection.astro';
-import VideoSection from '../../components/invitation/VideoSection.astro';
-import GallerySection from '../../components/invitation/GallerySection.astro';
-import GiftsSection from '../../components/invitation/GiftsSection.astro';
-import EntertainmentSection from '../../components/invitation/EntertainmentSection.astro';
-import SectionDivider from '../../components/invitation/SectionDivider.astro';
-import { CountdownSection } from '../../components/invitation/CountdownSection';
-import { RsvpSection } from '../../components/invitation/RsvpSection';
-import { SplashScreen } from '../../components/invitation/SplashScreen';
-import { MusicPlayer } from '../../components/invitation/MusicPlayer';
-import { db } from '../../lib/db';
-import { events, eventSections } from '../../lib/db/schema';
-import { eq, and, asc } from 'drizzle-orm';
+import "../../styles/global.css";
+import HeroSection from "../../components/invitation/HeroSection.astro";
+import StorySection from "../../components/invitation/StorySection.astro";
+import LocationSection from "../../components/invitation/LocationSection.astro";
+import GodparentsSection from "../../components/invitation/GodparentsSection.astro";
+import MessageSection from "../../components/invitation/MessageSection.astro";
+import ItinerarySection from "../../components/invitation/ItinerarySection.astro";
+import DressCodeSection from "../../components/invitation/DressCodeSection.astro";
+import VideoSection from "../../components/invitation/VideoSection.astro";
+import GallerySection from "../../components/invitation/GallerySection.astro";
+import GiftsSection from "../../components/invitation/GiftsSection.astro";
+import EntertainmentSection from "../../components/invitation/EntertainmentSection.astro";
+import SectionDivider from "../../components/invitation/SectionDivider.astro";
+import { CountdownSection } from "../../components/invitation/CountdownSection";
+import { RsvpSection } from "../../components/invitation/RsvpSection";
+import { SplashScreen } from "../../components/invitation/SplashScreen";
+import { MusicPlayer } from "../../components/invitation/MusicPlayer";
+import { db } from "../../lib/db";
+import { events, eventSections } from "../../lib/db/schema";
+import { eq, and, asc } from "drizzle-orm";
 
 export const prerender = false;
 
 const { slug } = Astro.params;
-const isPreview = Astro.url.searchParams.get('preview') === 'true';
+const isPreview = Astro.url.searchParams.get("preview") === "true";
 
 // Fetch event by slug — preview mode allows any status, public only published
 let eventQuery;
 if (isPreview) {
-  [eventQuery] = await db
-    .select()
-    .from(events)
-    .where(eq(events.slug, slug!));
+  [eventQuery] = await db.select().from(events).where(eq(events.slug, slug!));
 } else {
   [eventQuery] = await db
     .select()
     .from(events)
-    .where(and(eq(events.slug, slug!), eq(events.status, 'published')));
+    .where(and(eq(events.slug, slug!), eq(events.status, "published")));
 }
 
 const event = eventQuery;
 
 if (!event) {
-  return new Response(null, { status: 404, statusText: 'Invitacion no encontrada' });
+  return new Response(null, {
+    status: 404,
+    statusText: "Invitacion no encontrada",
+  });
 }
 
 // Fetch active sections ordered
 const sections = await db
   .select()
   .from(eventSections)
-  .where(and(eq(eventSections.eventId, event.id), eq(eventSections.isActive, true)))
+  .where(
+    and(eq(eventSections.eventId, event.id), eq(eventSections.isActive, true)),
+  )
   .orderBy(asc(eventSections.order));
 
 // Parse config
 const config = (event.customConfig || {}) as {
-  colors?: { primary: string; secondary: string; accent: string; background: string; text: string };
+  colors?: {
+    primary: string;
+    secondary: string;
+    accent: string;
+    background: string;
+    text: string;
+  };
   fonts?: { heading: string; body: string };
 };
 
 const colors = config.colors || {
-  primary: '#6366f1',
-  secondary: '#e0e7ff',
-  accent: '#818cf8',
-  background: '#ffffff',
-  text: '#1e293b',
+  primary: "#6366f1",
+  secondary: "#e0e7ff",
+  accent: "#818cf8",
+  background: "#ffffff",
+  text: "#1e293b",
 };
 
 const fonts = config.fonts || {
-  heading: 'Playfair Display',
-  body: 'Lato',
+  heading: "Playfair Display",
+  body: "Lato",
 };
 
-const variant = (config as any).variant || 'classic';
+const variant = (config as any).variant || "classic";
 
 // Format date for display
 const formattedDate = event.eventDate
-  ? new Date(event.eventDate + 'T00:00:00').toLocaleDateString('es-ES', {
-      day: '2-digit', month: '2-digit', year: 'numeric',
-    }).replace(/\//g, ' · ')
-  : '';
+  ? new Date(event.eventDate + "T00:00:00")
+      .toLocaleDateString("es-ES", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      })
+      .replace(/\//g, " · ")
+  : "";
 
 // Find music section for audio URL
-const musicSection = sections.find(s => s.sectionType === 'music');
-const audioUrl = (musicSection?.content as Record<string, unknown>)?.audioUrl as string || '';
+const musicSection = sections.find((s) => s.sectionType === "music");
+const audioUrl =
+  ((musicSection?.content as Record<string, unknown>)?.audioUrl as string) ||
+  "";
 
 // Google Fonts URL
 const fontsUrl = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(fonts.heading)}:wght@400;700&family=${encodeURIComponent(fonts.body)}:wght@300;400;600&display=swap`;
@@ -100,7 +114,7 @@ for (const section of sections) {
   altBgState = !altBgState;
   processedSections.push({
     type: section.sectionType,
-    content: section.content as Record<string, any> || {},
+    content: (section.content as Record<string, any>) || {},
     altBg: altBgState,
   });
 }
@@ -116,7 +130,10 @@ for (const section of sections) {
     <!-- OG Tags for WhatsApp -->
     <meta property="og:type" content="website" />
     <meta property="og:title" content={event.title} />
-    <meta property="og:description" content={`Estas invitado a ${event.title}`} />
+    <meta
+      property="og:description"
+      content={`Estas invitado a ${event.title}`}
+    />
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -124,27 +141,82 @@ for (const section of sections) {
     <link href={fontsUrl} rel="stylesheet" />
 
     <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
-      body { line-height: 1.6; }
-      .invitation-container { max-width: 448px; margin: 0 auto; overflow-x: hidden; min-height: 100vh; position: relative; }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+        -webkit-font-smoothing: antialiased;
+      }
+      body {
+        line-height: 1.6;
+      }
+      .invitation-container {
+        max-width: 448px;
+        margin: 0 auto;
+        overflow-x: hidden;
+        min-height: 100vh;
+        position: relative;
+      }
       /* Section divider - torn paper effect */
-      .section-divider { height: 24px; position: relative; }
+      .section-divider {
+        height: 24px;
+        position: relative;
+      }
       .section-divider::before {
-        content: '';
+        content: "";
         position: absolute;
         top: 0;
         left: -5%;
         right: -5%;
         height: 100%;
         background: inherit;
-        clip-path: polygon(0% 60%, 2% 40%, 5% 55%, 8% 35%, 12% 50%, 15% 30%, 18% 55%, 22% 40%, 25% 60%, 28% 35%, 32% 50%, 35% 30%, 38% 55%, 42% 40%, 45% 60%, 48% 35%, 52% 55%, 55% 40%, 58% 55%, 62% 35%, 65% 50%, 68% 40%, 72% 60%, 75% 35%, 78% 50%, 82% 30%, 85% 55%, 88% 35%, 92% 50%, 95% 40%, 98% 55%, 100% 40%, 100% 100%, 0% 100%);
+        clip-path: polygon(
+          0% 60%,
+          2% 40%,
+          5% 55%,
+          8% 35%,
+          12% 50%,
+          15% 30%,
+          18% 55%,
+          22% 40%,
+          25% 60%,
+          28% 35%,
+          32% 50%,
+          35% 30%,
+          38% 55%,
+          42% 40%,
+          45% 60%,
+          48% 35%,
+          52% 55%,
+          55% 40%,
+          58% 55%,
+          62% 35%,
+          65% 50%,
+          68% 40%,
+          72% 60%,
+          75% 35%,
+          78% 50%,
+          82% 30%,
+          85% 55%,
+          88% 35%,
+          92% 50%,
+          95% 40%,
+          98% 55%,
+          100% 40%,
+          100% 100%,
+          0% 100%
+        );
       }
       /* Scroll-triggered fade-in animations */
       .animate-section {
         opacity: 0;
         transform: translateY(30px);
-        transition: opacity 0.8s ease, transform 0.8s ease;
+        transition:
+          opacity 0.8s ease,
+          transform 0.8s ease;
       }
       .animate-section.visible {
         opacity: 1;
@@ -152,7 +224,9 @@ for (const section of sections) {
       }
     </style>
   </head>
-  <body style={`font-family: '${fonts.body}', sans-serif; background-color: ${colors.background};`}>
+  <body
+    style={`font-family: '${fonts.body}', sans-serif; background-color: ${colors.background};`}
+  >
     <div class="invitation-container">
       {/* Splash Screen */}
       <SplashScreen
@@ -165,181 +239,223 @@ for (const section of sections) {
       />
 
       {/* Sections */}
-      {processedSections.map((s, idx) => {
-        const currentBg = s.altBg ? colors.secondary : colors.background;
-        const prevS = processedSections[idx - 1];
-        const prevBg = prevS ? (prevS.altBg ? colors.secondary : colors.background) : null;
-        const showDividerBefore = prevBg !== null && prevBg !== currentBg;
-        const skipAnim = s.type === 'hero' || s.type === 'countdown';
+      {
+        processedSections.map((s, idx) => {
+          const currentBg = s.altBg ? colors.secondary : colors.background;
+          const prevS = processedSections[idx - 1];
+          const prevBg = prevS
+            ? prevS.altBg
+              ? colors.secondary
+              : colors.background
+            : null;
+          const showDividerBefore = prevBg !== null && prevBg !== currentBg;
+          const nextS = processedSections[idx + 1];
+          const nextBg = nextS
+            ? nextS.altBg
+              ? colors.secondary
+              : colors.background
+            : null;
+          const showDividerAfter = nextBg !== null && nextBg !== currentBg;
+          const skipAnim = s.type === "hero" || s.type === "countdown";
 
-        let section = null;
+          let section = null;
 
-        if (s.type === 'hero') section = (
-          <HeroSection
-            title={s.content.title || event.title}
-            subtitle={s.content.subtitle}
-            date={formattedDate}
-            imageUrl={s.content.imageUrl}
-            colors={colors}
-            fonts={fonts}
-            variant={variant}
-          />
-        );
-        if (s.type === 'countdown' && event.eventDate) section = (
-          <CountdownSection
-            client:load
-            eventDate={event.eventDate}
-            eventTime={event.eventTime || undefined}
-            endMessage={s.content.endMessage}
-            colors={colors}
-            fonts={fonts}
-            variant={variant}
-          />
-        );
-        if (s.type === 'story') section = (
-          <StorySection
-            title={s.content.title}
-            content={s.content.content}
-            imageUrl={s.content.imageUrl}
-            colors={colors}
-            fonts={fonts}
-            altBackground={s.altBg}
-            variant={variant}
-          />
-        );
-        if (s.type === 'ceremony') section = (
-          <LocationSection
-            title="Ceremonia"
-            placeName={s.content.placeName}
-            address={s.content.address}
-            time={s.content.time}
-            latitude={s.content.latitude}
-            longitude={s.content.longitude}
-            notes={s.content.notes}
-            imageUrl={s.content.imageUrl}
-            colors={colors}
-            fonts={fonts}
-            altBackground={s.altBg}
-            variant={variant}
-          />
-        );
-        if (s.type === 'reception') section = (
-          <LocationSection
-            title="Recepcion"
-            placeName={s.content.placeName}
-            address={s.content.address}
-            time={s.content.time}
-            latitude={s.content.latitude}
-            longitude={s.content.longitude}
-            notes={s.content.notes}
-            imageUrl={s.content.imageUrl}
-            colors={colors}
-            fonts={fonts}
-            altBackground={s.altBg}
-            variant={variant}
-          />
-        );
-        if (s.type === 'godparents') section = (
-          <GodparentsSection
-            people={s.content.people || []}
-            colors={colors}
-            fonts={fonts}
-            altBackground={s.altBg}
-            variant={variant}
-          />
-        );
-        if (s.type === 'gallery') section = (
-          <GallerySection
-            images={s.content.images || []}
-            colors={colors}
-            fonts={fonts}
-            altBackground={s.altBg}
-            variant={variant}
-          />
-        );
-        if (s.type === 'message') section = (
-          <MessageSection
-            title={s.content.title}
-            content={s.content.content}
-            colors={colors}
-            fonts={fonts}
-            altBackground={s.altBg}
-            variant={variant}
-          />
-        );
-        if (s.type === 'itinerary') section = (
-          <ItinerarySection
-            items={s.content.items || []}
-            colors={colors}
-            fonts={fonts}
-            altBackground={s.altBg}
-            variant={variant}
-          />
-        );
-        if (s.type === 'dresscode') section = (
-          <DressCodeSection
-            description={s.content.description}
-            colors={colors}
-            fonts={fonts}
-            altBackground={s.altBg}
-            variant={variant}
-          />
-        );
-        if (s.type === 'video' && s.content.url) section = (
-          <VideoSection
-            url={s.content.url}
-            type={s.content.type}
-            poster={s.content.poster}
-            colors={colors}
-            fonts={fonts}
-            altBackground={s.altBg}
-            variant={variant}
-          />
-        );
-        if (s.type === 'entertainment') section = (
-          <EntertainmentSection
-            items={s.content.items || []}
-            colors={colors}
-            fonts={fonts}
-            altBackground={s.altBg}
-            variant={variant}
-          />
-        );
-        if (s.type === 'gifts') section = (
-          <GiftsSection
-            items={s.content.items || []}
-            colors={colors}
-            fonts={fonts}
-            altBackground={s.altBg}
-            variant={variant}
-          />
-        );
-        if (s.type === 'rsvp') section = (
-          <RsvpSection
-            client:load
-            eventId={event.id}
-            deadline={s.content.deadline}
-            maxGuests={s.content.maxGuests}
-            showDietary={s.content.showDietary}
-            showMessage={s.content.showMessage}
-            colors={colors}
-            fonts={fonts}
-            variant={variant}
-          />
-        );
+          if (s.type === "hero")
+            section = (
+              <HeroSection
+                title={s.content.title || event.title}
+                subtitle={s.content.subtitle}
+                date={formattedDate}
+                imageUrl={s.content.imageUrl}
+                colors={colors}
+                fonts={fonts}
+                variant={variant}
+              />
+            );
+          if (s.type === "countdown" && event.eventDate)
+            section = (
+              <CountdownSection
+                client:load
+                eventDate={event.eventDate}
+                eventTime={event.eventTime || undefined}
+                endMessage={s.content.endMessage}
+                colors={colors}
+                fonts={fonts}
+                variant={variant}
+              />
+            );
+          if (s.type === "story")
+            section = (
+              <StorySection
+                title={s.content.title}
+                content={s.content.content}
+                imageUrl={s.content.imageUrl}
+                colors={colors}
+                fonts={fonts}
+                altBackground={s.altBg}
+                variant={variant}
+              />
+            );
+          if (s.type === "ceremony")
+            section = (
+              <LocationSection
+                title="Ceremonia"
+                placeName={s.content.placeName}
+                address={s.content.address}
+                time={s.content.time}
+                latitude={s.content.latitude}
+                longitude={s.content.longitude}
+                notes={s.content.notes}
+                imageUrl={s.content.imageUrl}
+                colors={colors}
+                fonts={fonts}
+                altBackground={s.altBg}
+                variant={variant}
+              />
+            );
+          if (s.type === "reception")
+            section = (
+              <LocationSection
+                title="Recepcion"
+                placeName={s.content.placeName}
+                address={s.content.address}
+                time={s.content.time}
+                latitude={s.content.latitude}
+                longitude={s.content.longitude}
+                notes={s.content.notes}
+                imageUrl={s.content.imageUrl}
+                colors={colors}
+                fonts={fonts}
+                altBackground={s.altBg}
+                variant={variant}
+              />
+            );
+          if (s.type === "godparents")
+            section = (
+              <GodparentsSection
+                people={s.content.people || []}
+                colors={colors}
+                fonts={fonts}
+                altBackground={s.altBg}
+                variant={variant}
+              />
+            );
+          if (s.type === "gallery")
+            section = (
+              <GallerySection
+                images={s.content.images || []}
+                colors={colors}
+                fonts={fonts}
+                altBackground={s.altBg}
+                variant={variant}
+              />
+            );
+          if (s.type === "message")
+            section = (
+              <MessageSection
+                title={s.content.title}
+                content={s.content.content}
+                colors={colors}
+                fonts={fonts}
+                altBackground={s.altBg}
+                variant={variant}
+              />
+            );
+          if (s.type === "itinerary")
+            section = (
+              <ItinerarySection
+                items={s.content.items || []}
+                colors={colors}
+                fonts={fonts}
+                altBackground={s.altBg}
+                variant={variant}
+              />
+            );
+          if (s.type === "dresscode")
+            section = (
+              <DressCodeSection
+                description={s.content.description}
+                colors={colors}
+                fonts={fonts}
+                altBackground={s.altBg}
+                variant={variant}
+              />
+            );
+          if (s.type === "video" && s.content.url)
+            section = (
+              <VideoSection
+                url={s.content.url}
+                type={s.content.type}
+                poster={s.content.poster}
+                colors={colors}
+                fonts={fonts}
+                altBackground={s.altBg}
+                variant={variant}
+              />
+            );
+          if (s.type === "entertainment")
+            section = (
+              <EntertainmentSection
+                items={s.content.items || []}
+                colors={colors}
+                fonts={fonts}
+                altBackground={s.altBg}
+                variant={variant}
+              />
+            );
+          if (s.type === "gifts")
+            section = (
+              <GiftsSection
+                items={s.content.items || []}
+                colors={colors}
+                fonts={fonts}
+                altBackground={s.altBg}
+                variant={variant}
+              />
+            );
+          if (s.type === "rsvp")
+            section = (
+              <RsvpSection
+                client:load
+                eventId={event.id}
+                deadline={s.content.deadline}
+                maxGuests={s.content.maxGuests}
+                showDietary={s.content.showDietary}
+                showMessage={s.content.showMessage}
+                colors={colors}
+                fonts={fonts}
+                variant={variant}
+              />
+            );
 
-        if (!section) return null;
+          if (!section) return null;
 
-        return (
-          <>
-            {showDividerBefore && <SectionDivider fromColor={prevBg} toColor={currentBg} variant={variant} />}
-            {skipAnim ? section : <div class="animate-section">{section}</div>}
-          </>
-        );
-      })}
+          return (
+            <>
+              {skipAnim ? (
+                section
+              ) : (
+                <div class="animate-section">
+                  {section}
+                </div>
+              )}
+              {showDividerAfter && (
+                <SectionDivider
+                  fromColor={currentBg}
+                  toColor={nextBg}
+                  variant={variant}
+                />
+              )}
+            </>
+          );
+        })
+      }
 
       {/* Footer */}
-      <section class="py-10 px-6 text-center" style={`background-color: ${colors.background}`}>
+      <section
+        class="py-10 px-6 text-center"
+        style={`background-color: ${colors.background}`}
+      >
         <p class="text-xs" style={`color: ${colors.text}; opacity: 0.4`}>
           Hecho con amor
         </p>
@@ -354,18 +470,20 @@ for (const section of sections) {
 
     <script>
       // IntersectionObserver for scroll animations
-      document.addEventListener('DOMContentLoaded', () => {
+      document.addEventListener("DOMContentLoaded", () => {
         const observer = new IntersectionObserver(
           (entries) => {
             entries.forEach((entry) => {
               if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
+                entry.target.classList.add("visible");
               }
             });
           },
-          { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+          { threshold: 0.1, rootMargin: "0px 0px -50px 0px" },
         );
-        document.querySelectorAll('.animate-section').forEach((el) => observer.observe(el));
+        document
+          .querySelectorAll(".animate-section")
+          .forEach((el) => observer.observe(el));
       });
     </script>
   </body>

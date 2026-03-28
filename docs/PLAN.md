@@ -9,7 +9,7 @@
 | F2        | Templates y Personalizacion  |     3     |   25    |  Muy Alta   |           ✅ Completada (HU-005 85%, HU-006 75%, HU-007 ✅) — T-005.2/T-006.4/T-006.5/T-006.7-9 diferidos           |
 | F3        | Multimedia                   |     3     |   21    |    Alta     | ✅ Completada (HU-008 ✅, HU-009 90%, HU-010 70%) — diferidos: biblioteca musica, fade audio, upload video directo  |
 | F4        | Pagina Publica de Invitacion |     4     |   27    |  Muy Alta   |                           ✅ Completada (HU-011 90%, HU-012 90%, HU-013 50%, HU-014 80%)                            |
-| F5        | Compartir y Distribucion     |     2     |   12    |    Media    |                                                      Pendiente                                                      |
+| F5        | Compartir y Distribucion     |     2     |   12    |    Media    |               ✅ Completada (HU-015 95%, HU-016 90%) — diferidos: T-015.4 og:image generada dinamica                |
 | F6        | Analytics y Gestion Avanzada |     2     |   10    |    Media    |                                                      Pendiente                                                      |
 | F7        | Admin Panel                  |     1     |    5    |    Media    |                                                      Pendiente                                                      |
 | F8        | Monetizacion (Futuro)        |     1     |    4    |    Media    |                                                      Pendiente                                                      |
@@ -17,13 +17,14 @@
 
 ## Progreso General
 
-- **Tareas completadas:** ~115 de 139
-- **Porcentaje:** ~83%
-- **Fase actual:** F4 CERRADA. Siguiente: F5 (Compartir y Distribucion)
+- **Tareas completadas:** ~125 de 139
+- **Porcentaje:** ~90%
+- **Fase actual:** F5 CERRADA. MVP COMPLETO (F0-F5). Siguiente: F6 (Analytics, post-MVP)
+- **Diferidos F5:** T-015.4 (og:image generada dinamicamente con Satori)
 - **Diferidos F4:** Lighthouse optimization, favicon dinamico, service worker, Mapbox, CSV export, notificaciones RSVP
 - **Diferidos de F1:** T-001.3 (recuperar contrasena), T-001.4 (login Google), T-002.3 (filtros), T-002.4 (busqueda)
 - **Diferidos de F2:** T-005.2 (template engine layouts), T-006.4/5 (tamanos/layout), T-006.7-9 (preview movil/presets/reset)
-- **Nota:** F4 iniciada prematuramente. Se cerrara despues de F3.
+- **Infra:** Docker multi-stage + GitHub Actions CI/CD + Dokploy deploy configurado
 
 ## MVP Minimo Viable
 

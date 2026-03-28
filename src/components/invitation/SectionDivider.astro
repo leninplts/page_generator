@@ -6,20 +6,47 @@ interface Props {
 }
 
 const { fromColor, toColor, variant = 'classic' } = Astro.props;
+
+// Organic torn paper path — irregular like real ripped paper
+// Layer 1 (back/shadow): slightly lower, creates depth
+// Layer 2 (mid): semi-transparent edge, creates the "fiber" look
+// Layer 3 (front): the actual paper edge
+const tornPath1 = "M0,0 L1200,0 L1200,35 C1180,28 1160,42 1140,32 C1120,22 1105,38 1085,30 C1065,42 1045,25 1030,35 C1010,45 995,28 975,38 C960,48 940,30 920,40 C905,50 885,32 865,42 C845,35 830,48 810,38 C790,28 775,45 755,35 C735,48 720,30 700,42 C685,52 665,35 645,45 C625,38 610,50 590,40 C570,30 555,48 535,38 C515,28 500,45 480,35 C460,48 445,30 425,42 C405,52 390,35 370,45 C350,38 335,50 315,40 C295,30 280,48 260,38 C240,48 225,32 205,42 C185,52 170,35 150,45 C130,38 115,50 95,40 C75,30 60,48 40,38 C20,48 10,35 0,42 Z";
+
+const tornPath2 = "M0,0 L1200,0 L1200,30 C1175,24 1155,36 1135,28 C1115,40 1095,22 1080,32 C1060,42 1040,26 1025,36 C1005,46 985,28 970,38 C950,48 935,30 915,40 C895,34 880,46 860,36 C840,26 825,42 805,34 C785,44 770,28 750,38 C730,48 715,32 695,42 C675,36 660,48 640,38 C620,28 605,44 585,36 C565,46 550,30 530,40 C510,34 495,46 475,38 C455,28 440,44 420,36 C400,46 385,30 365,40 C345,34 330,46 310,38 C290,28 275,44 255,36 C235,46 220,30 200,40 C180,34 165,46 145,38 C125,28 110,44 90,36 C70,46 55,30 35,40 C15,34 5,42 0,38 Z";
+
+const tornPath3 = "M0,0 L1200,0 L1200,25 C1178,20 1158,34 1138,24 C1118,36 1098,20 1078,30 C1058,40 1038,24 1018,34 C998,44 978,26 963,36 C943,46 928,28 908,38 C888,32 873,44 853,34 C833,24 818,40 798,32 C778,42 763,26 743,36 C723,46 708,30 688,40 C668,34 653,46 633,36 C613,26 598,42 578,34 C558,44 543,28 523,38 C503,32 488,44 468,36 C448,26 433,42 413,34 C393,44 378,28 358,38 C338,32 323,44 303,36 C283,26 268,42 248,34 C228,44 213,28 193,38 C173,32 158,44 138,36 C118,26 103,42 83,34 C63,44 48,28 28,38 C8,32 3,40 0,36 Z";
 ---
 
 {variant === 'classic' && (
-  <div class="relative h-16 -mt-2 z-10" style={`background-color: ${toColor}`}>
-    {/* Main torn paper edge — wide organic rip like real paper */}
-    <div
-      class="absolute top-0 left-[-2%] right-[-2%]"
-      style={`height: 100%; background-color: ${fromColor}; clip-path: polygon(0 0, 100% 0, 100% 15%, 98% 35%, 96% 20%, 94% 45%, 91% 25%, 89% 50%, 87% 30%, 84% 55%, 82% 35%, 79% 60%, 77% 40%, 75% 55%, 72% 30%, 70% 50%, 68% 25%, 65% 45%, 63% 20%, 60% 50%, 58% 30%, 55% 55%, 53% 35%, 50% 60%, 48% 40%, 45% 55%, 43% 30%, 40% 50%, 38% 25%, 35% 45%, 33% 20%, 30% 50%, 28% 30%, 25% 55%, 22% 35%, 20% 60%, 18% 40%, 15% 55%, 13% 30%, 10% 50%, 8% 25%, 5% 45%, 3% 20%, 1% 40%, 0 30%)`}
-    />
-    {/* Shadow for depth — offset slightly down */}
-    <div
-      class="absolute left-[-2%] right-[-2%]"
-      style={`top: 3px; height: 100%; opacity: 0.08; background-color: #000; clip-path: polygon(0 0, 100% 0, 100% 15%, 98% 35%, 96% 20%, 94% 45%, 91% 25%, 89% 50%, 87% 30%, 84% 55%, 82% 35%, 79% 60%, 77% 40%, 75% 55%, 72% 30%, 70% 50%, 68% 25%, 65% 45%, 63% 20%, 60% 50%, 58% 30%, 55% 55%, 53% 35%, 50% 60%, 48% 40%, 45% 55%, 43% 30%, 40% 50%, 38% 25%, 35% 45%, 33% 20%, 30% 50%, 28% 30%, 25% 55%, 22% 35%, 20% 60%, 18% 40%, 15% 55%, 13% 30%, 10% 50%, 8% 25%, 5% 45%, 3% 20%, 1% 40%, 0 30%); filter: blur(3px)`}
-    />
+  <div class="relative -mt-1 overflow-hidden" style={`height: 50px; background-color: ${toColor}`}>
+    {/* Layer 1: Shadow (deepest, most offset) */}
+    <svg
+      class="absolute top-[6px] left-0 w-full"
+      viewBox="0 0 1200 55"
+      preserveAspectRatio="none"
+      style="height: 50px; opacity: 0.08"
+    >
+      <path d={tornPath1} fill="#000" />
+    </svg>
+    {/* Layer 2: Mid-tone (semi-transparent edge = paper fibers) */}
+    <svg
+      class="absolute top-[3px] left-0 w-full"
+      viewBox="0 0 1200 55"
+      preserveAspectRatio="none"
+      style="height: 50px; opacity: 0.35"
+    >
+      <path d={tornPath2} fill={fromColor} />
+    </svg>
+    {/* Layer 3: Front paper (solid) */}
+    <svg
+      class="absolute top-0 left-0 w-full"
+      viewBox="0 0 1200 55"
+      preserveAspectRatio="none"
+      style="height: 50px"
+    >
+      <path d={tornPath3} fill={fromColor} />
+    </svg>
   </div>
 )}
 

@@ -39,10 +39,15 @@ if (isPreview) {
 const event = eventQuery;
 
 if (!event) {
-  return new Response(null, {
-    status: 404,
-    statusText: "Invitacion no encontrada",
-  });
+  // Check if event exists but is not published (draft/archived)
+  const [existsButNotPublished] = isPreview
+    ? []
+    : await db.select({ id: events.id }).from(events).where(eq(events.slug, slug!));
+
+  if (existsButNotPublished) {
+    return Astro.redirect(`/e/unavailable`);
+  }
+  return Astro.redirect(`/e/not-found`);
 }
 
 // Fetch active sections ordered
@@ -98,6 +103,10 @@ const audioUrl =
   ((musicSection?.content as Record<string, unknown>)?.audioUrl as string) ||
   "";
 
+// Hero image for OG tags
+const heroSection = sections.find((s) => s.sectionType === "hero");
+const heroImageUrl = ((heroSection?.content as Record<string, unknown>)?.imageUrl as string) || "";
+
 // Google Fonts URL
 const fontsUrl = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(fonts.heading)}:wght@400;700&family=${encodeURIComponent(fonts.body)}:wght@300;400;600&display=swap`;
 
@@ -134,13 +143,16 @@ for (const section of sections) {
     <title>{event.title}</title>
     <meta name="description" content={`Estas invitado a ${event.title}`} />
 
-    <!-- OG Tags for WhatsApp -->
+    <!-- OG Tags for WhatsApp / Social -->
     <meta property="og:type" content="website" />
     <meta property="og:title" content={event.title} />
-    <meta
-      property="og:description"
-      content={`Estas invitado a ${event.title}`}
-    />
+    <meta property="og:description" content={`Estas invitado a ${event.title}`} />
+    <meta property="og:url" content={Astro.url.href} />
+    {heroImageUrl && <meta property="og:image" content={heroImageUrl} />}
+    <meta name="twitter:card" content={heroImageUrl ? "summary_large_image" : "summary"} />
+    <meta name="twitter:title" content={event.title} />
+    <meta name="twitter:description" content={`Estas invitado a ${event.title}`} />
+    {heroImageUrl && <meta name="twitter:image" content={heroImageUrl} />}
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

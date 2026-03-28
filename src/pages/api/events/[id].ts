@@ -2,7 +2,7 @@ import type { APIRoute } from "astro";
 import { db } from "../../../lib/db";
 import { events, eventSections } from "../../../lib/db/schema";
 import { updateEventSchema } from "../../../lib/validators/events";
-import { eq, and } from "drizzle-orm";
+import { eq, and, ne } from "drizzle-orm";
 
 export const GET: APIRoute = async ({ locals, params }) => {
   if (!locals.user) {
@@ -62,9 +62,39 @@ export const PATCH: APIRoute = async ({ locals, params, request }) => {
       );
     }
 
+    // Validate slug uniqueness if changing
+    if (parsed.data.slug) {
+      const [existing] = await db
+        .select({ id: events.id })
+        .from(events)
+        .where(
+          and(eq(events.slug, parsed.data.slug), ne(events.id, params.id!)),
+        );
+      if (existing) {
+        return new Response(
+          JSON.stringify({ error: "Esa URL ya esta en uso" }),
+          { status: 409 },
+        );
+      }
+    }
+
+    // Handle publishedAt when status changes
+    const updateData: Record<string, any> = {
+      ...parsed.data,
+      updatedAt: new Date(),
+    };
+    if (parsed.data.status === "published") {
+      updateData.publishedAt = new Date();
+    } else if (
+      parsed.data.status === "draft" ||
+      parsed.data.status === "archived"
+    ) {
+      updateData.publishedAt = null;
+    }
+
     const [updated] = await db
       .update(events)
-      .set({ ...parsed.data, updatedAt: new Date() })
+      .set(updateData)
       .where(and(eq(events.id, params.id!), eq(events.userId, locals.user.id)))
       .returning();
 

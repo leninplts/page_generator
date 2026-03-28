@@ -34,6 +34,15 @@ export type CreateEventInput = z.infer<typeof createEventSchema>;
 // Update event basic info
 export const updateEventSchema = z.object({
   title: z.string().min(3).max(255).optional(),
+  slug: z
+    .string()
+    .min(3, "El slug debe tener al menos 3 caracteres")
+    .max(255)
+    .regex(
+      /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+      "Solo letras minusculas, numeros y guiones",
+    )
+    .optional(),
   eventDate: z
     .string()
     .regex(/^\d{4}-\d{2}-\d{2}$/)
